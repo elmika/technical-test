@@ -21,6 +21,13 @@ class UserController
         });
 
         // order by client name and surname
+        usort($usersArray, function(&$a, &$b){
+            if($a["surname"] == $b["surname"]) {
+                return strcmp($a["name"], $b["name"]);
+            }
+
+            return strcmp($a["surname"], $b["surname"]);
+        });
 
         // filtered
 
