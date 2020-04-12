@@ -51,7 +51,7 @@ class ListUsersService
     public function applyFilters($filters)
     {
         if(array_key_exists('countries', $filters)){
-            $this->applyCoutriesFilter($filters['countries']);
+            $this->applyCountriesFilter($filters['countries']);
         }
 
         if(array_key_exists('activation_length', $filters)){
@@ -59,9 +59,17 @@ class ListUsersService
         }
     }
 
-    private function applyCoutriesFilter($filter)
+    private function applyCountriesFilter($filter)
     {
-
+        $countriesFilter = explode(",", $filter);
+        foreach($this->list as $key=>$element)
+        {
+            if(! in_array($element['country'], $countriesFilter))
+            {
+                unset($this->list[$key]);
+            }
+        }
+        $this->list = array_values($this->list);
     }
 
     private function applyActivationLengthFilter($maxDays)
@@ -76,8 +84,8 @@ class ListUsersService
             {
                 unset($this->list[$key]);
             }
-            $this->list = array_values($this->list);
         }
+        $this->list = array_values($this->list);
     }
 
     public function asArray()
