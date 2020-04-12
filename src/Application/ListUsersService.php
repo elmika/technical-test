@@ -6,6 +6,7 @@ namespace App\Application;
 
 class ListUsersService
 {
+    const HEADERS = ["id", "name", "surname", "email", "country", "createdAt", "activatedAt", "chargerID"];
     private $list;
 
     /**
@@ -24,7 +25,8 @@ class ListUsersService
     private function read(string $sourceFile)
     {
         $usersArray = array_map('str_getcsv', file($sourceFile));
-        $headers = ["id", "name", "surname", "email", "country", "createdAt", "activatedAt", "chargerID"];
+
+        $headers = self::HEADERS;
         array_walk($usersArray, function(&$a) use ($headers, $usersArray) {
             $a = array_combine($headers, $a);
         });
@@ -48,7 +50,34 @@ class ListUsersService
 
     public function applyFilters($filters)
     {
+        if(array_key_exists('countries', $filters)){
+            $this->applyCoutriesFilter($filters['countries']);
+        }
 
+        if(array_key_exists('activation_length', $filters)){
+            $this->applyActivationLengthFilter($filters['activation_length']);
+        }
+    }
+
+    private function applyCoutriesFilter($filter)
+    {
+
+    }
+
+    private function applyActivationLengthFilter($maxDays)
+    {
+        foreach($this->list as $key=>$element)
+        {
+            $dateFrom = new \DateTimeImmutable($element['activatedAt']);
+            $dateTo = new \DateTimeImmutable($element['createdAt']);
+
+            $diffDays = $dateTo->diff($dateFrom)->format('%a');
+            if((int)$diffDays < $maxDays)
+            {
+                unset($this->list[$key]);
+            }
+            $this->list = array_values($this->list);
+        }
     }
 
     public function asArray()
