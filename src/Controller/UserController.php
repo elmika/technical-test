@@ -3,6 +3,8 @@
 
 namespace App\Controller;
 
+use App\Application\ListUsersService;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -11,27 +13,16 @@ class UserController
     /**
      * @Route("/users", methods={"GET"}, )
      */
-    public function listUsers()
+    public function listUsers(Request $request)
     {
-        // read csv file - UserCsvService (Application Service)?
-        $usersArray = array_map('str_getcsv', file("https://wallbox.s3-eu-west-1.amazonaws.com/img/test/users.csv"));
-        $headers = ["id", "name", "surname", "email", "country", "createdAt", "activatedAt", "chargerID"];
-        array_walk($usersArray, function(&$a) use ($headers, $usersArray) {
-            $a = array_combine($headers, $a);
-        });
-
-        // order by client name and surname
-        usort($usersArray, function(&$a, &$b){
-            if($a["surname"] == $b["surname"]) {
-                return strcmp($a["name"], $b["name"]);
-            }
-
-            return strcmp($a["surname"], $b["surname"]);
-        });
-
-        // filtered
+        // read csv file
+        $csvLocation = "https://wallbox.s3-eu-west-1.amazonaws.com/img/test/users.csv";
+        $userList = new ListUsersService($csvLocation);
+        // apply filters
+        $filters = $request->query->all();
+        $userList->applyFilters($filters);
 
         // respond as json
-        return new JsonResponse(["items" => $usersArray]);
+        return new JsonResponse(["items" => $userList->asArray()]);
     }
 }
