@@ -7,8 +7,9 @@ use App\Application\ListUsersService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class UserController
+class UserController extends AbstractController
 {
     /**
      * @Route("/users", methods={"GET"}, )
@@ -16,7 +17,7 @@ class UserController
     public function listUsers(Request $request)
     {
         // read csv file
-        $csvLocation = "https://wallbox.s3-eu-west-1.amazonaws.com/img/test/users.csv";
+        $csvLocation = $this->getParameter('app.user_list_csv_location');
         $userList = new ListUsersService($csvLocation);
         // apply filters
         $filters = $request->query->all();
