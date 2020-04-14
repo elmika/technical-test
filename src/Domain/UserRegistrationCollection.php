@@ -7,7 +7,8 @@ class UserRegistrationCollection extends \ArrayObject
 {
     public function offsetSet($index, $newValue)
     {
-        if (!is_a($newValue, UserRegistration::class)) {
+        if (!is_a($newValue, UserRegistration::class))
+        {
             throw new \InvalidArgumentException("Values in a User Registration Collection must be of type User Registration");
         }
 
@@ -33,5 +34,24 @@ class UserRegistrationCollection extends \ArrayObject
     public function sortListByNameAndSurname(): void
     {
         $this->uasort([UserRegistration::class, "compareUsers"]);
+    }
+
+    /**
+     * @return array ready to be displayed as json in the Response
+     * @todo Build a DTO for that
+     */
+    public function asArray()
+    {
+        $result = [];
+
+        /**
+         * @var UserRegistration $registration
+         */
+        foreach($this as $registration)
+        {
+            $result[] =$registration->asArray();
+        }
+
+        return $result;
     }
 }

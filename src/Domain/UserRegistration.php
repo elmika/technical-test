@@ -120,4 +120,24 @@ class UserRegistration
     {
         return $a->getUser()->compareTo($b->getUser());
     }
+
+    public function asArray() : array
+    {
+        $array = [
+            "id" => $this->getId(),
+            "name" =>  $this->getUser()->getName(),
+            "surname" => $this->getUser()->getSurname(),
+            "email" => $this->getUser()->getEmail(),
+            "country" => $this->getUser()->getCountryCode(),
+            "createdAt" => $this->getCreatedAt()->format("Y-m-d")
+        ];
+
+        if($this->isActivated())
+        {
+            $array["activatedAt"] = $this->getActivatedAt()->format("Y-m-d");
+            $array["chargerID"] = $this->getChargerId();
+        }
+
+        return $array;
+    }
 }

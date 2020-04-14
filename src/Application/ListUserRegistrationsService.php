@@ -3,6 +3,7 @@
 
 namespace App\Application;
 
+use App\Domain\UserRegistrationCollection;
 use App\Domain\UserRegistrationCriteria;
 use App\Infrastructure\ListUserRegistrationCsvRepository;
 
@@ -20,16 +21,12 @@ class ListUserRegistrationsService
     }
 
     /**
-     * @param array $parameters with keys countries and activation_length for filtering
+     * * @param array $parameters with keys countries and activation_length for filtering
+     * @return UserRegistrationCollection
      */
-    public function query(array $parameters)
+    public function query(array $parameters=[]): UserRegistrationCollection
     {
         $criteria = new UserRegistrationCriteria($parameters);
-        $this->repository->query($criteria);
-    }
-
-    public function asArray()
-    {
-        return $this->repository->asArray();
+        return $this->repository->query($criteria);
     }
 }

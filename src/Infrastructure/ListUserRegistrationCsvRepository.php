@@ -89,42 +89,4 @@ class ListUserRegistrationCsvRepository implements ListUserRegistrationRepositor
 
         $this->collection->append($userRegistration);
     }
-
-    /**
-     * @return array ready to be displayed as json in the Response
-     * @todo Build a DTO for that
-     */
-    public function asArray()
-    {
-        $result = [];
-
-        if( is_null($this->collection) )
-        {
-            $this->query();
-        }
-
-        /**
-         * @var UserRegistration $registration
-         */
-        foreach($this->collection as $registration){
-            $registrationArray = [
-                "id" => $registration->getId(),
-                "name" =>  $registration->getUser()->getName(),
-                "surname" => $registration->getUser()->getSurname(),
-                "email" => $registration->getUser()->getEmail(),
-                "country" => $registration->getUser()->getCountryCode(),
-                "createdAt" => $registration->getCreatedAt()->format("Y-m-d")
-            ];
-
-            if($registration->isActivated())
-            {
-                $registrationArray["activatedAt"] = $registration->getActivatedAt()->format("Y-m-d");
-                $registrationArray["chargerID"] = $registration->getChargerId();
-            }
-
-            $result[] = $registrationArray;
-        }
-
-        return $result;
-    }
 }

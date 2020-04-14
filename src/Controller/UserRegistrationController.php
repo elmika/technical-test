@@ -19,12 +19,12 @@ class UserRegistrationController extends AbstractController
     {
         // read csv file
         $csvLocation = $this->getParameter('app.user_list_csv_location');
-        $userList = new ListUserRegistrationsService($csvLocation);
+        $userRegistrationsList = new ListUserRegistrationsService($csvLocation);
         // apply filters
         $filters = $request->query->all();
-        $userList->query($filters);
+        $collection = $userRegistrationsList->query($filters);
 
         // respond as json
-        return new JsonResponse(["items" => $userList->asArray()]);
+        return new JsonResponse(["items" => $collection->asArray()]);
     }
 }
