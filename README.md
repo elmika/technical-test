@@ -1,14 +1,3 @@
-El sistema de gestión de usuarios almacena la información en un archivo CSV dinámico ​users.csv​ actualizado cada 24 horas. La información está estructurada en las siguientes columnas:
-
-- Identificador de la estancia (columna 0)
-- Nombre del cliente (columna 1)
-- Apellido del cliente (columna 2)
-- Email (columna 3)
-- Código ISO2 del país de residencia (columna 4)
-- Fecha de creación del usuario (columna 5)
-- Fecha de activación del usuario (columna 6)
-- Código del cargador (columna 7)
-
 # Environment setup
 
 ### Run local server
@@ -21,9 +10,7 @@ Run tests
 
 ./bin/phpunit
 
-Code coverage - pending.
-
-### List users found in csv file:
+### Examples
 
 ````
 curl http://localhost:8000/users
@@ -55,15 +42,14 @@ Published on Swagger Hub: https://app.swaggerhub.com/apis/elmika/technical-test/
 
 # Project explanation
 
-- Cache management (pending): if we do a request for the csv file asking only for the headers we can see the last time it has been updated. This can be used to set up a strategy of caching the file in our local system.
-
-- Application Service: all the logic is in this service.
-
-- DDD:
-    - UserList should be an entity.
-    - User is implemented as Value object, but should probably be an Entity (you may have to update email)
-    - Value objects may be used as attributes, especially for emails and country codes.
-    - Repository interface defined in the Domain. Implemented in the infrastucture layer with the logic of retrieving the data from the public csv file.
-    - Criteria only contains logic for filtering. Could also do ordering.
-    
-- Exception handling - pending
+- DDD structure:    
+    - User is implemented as Value object, and contains only user information: name, surname, email and country.
+    - UserRegistration is an entity identified by the filed Id. We proposed a logic of dealing with non registered users and possible posterior registration, even if this is out of the scope of this excercise.
+    - UserRegistrationCollection is a list of UserRegistration and contains logic for filtering and ordering.
+    - A Repository interface is defined in the Domain, implemented in the Infrastucture layer, used in the Application layer and instanciated in the Controller.
+    - Criteria is used to apply modifying logic of the collection of registration. At the moment, it only contains logic for filtering.
+- Further possible steps:
+    - Value objects could be introduced as attributes, especially for emails and country codes.
+    - Introduce caching strategy to retrive csv (retrieve header with HEAD request and see if newer version has been published)
+    - Introduce ordering logic in Criteria.
+    - Define app specific exceptions, introduce corresponding exception handling
