@@ -49,8 +49,7 @@ curl "http://localhost:8000/users?activation_length=25&countries=FR,ES"
 
 ### API documentation
 
-(pending)
-We will use openapi format to describe our endpoint.
+Published on Swagger Hub: https://app.swaggerhub.com/apis/elmika/technical-test/1.0.0
 
 
 

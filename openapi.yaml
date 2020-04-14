@@ -1,0 +1,85 @@
+openapi: "3.0.0"
+info:
+  title: Test user Registration
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/
+paths:
+  /users:
+    get:
+      operationId: listUserRegistrations
+      summary: List User Registrations extracted from csv file
+      parameters:
+        - name: countries
+          in: query
+          description: countries to filter by - country codes separated by comma
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: activation_length
+          in: query
+          description: find elements where time between creation and activation is over the given number of days
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json:
+              examples:
+                sample-one:
+                  value:
+                    {
+                      "items": [
+                      {
+                        "id": "777",
+                        "name": "Benjamin",
+                        "surname": "Carr",
+                        "email": "bcarrlk@state.gov",
+                        "country": "FR",
+                        "createdAt": "2015-12-04",
+                        "activatedAt": "2015-12-30",
+                        "chargerID": "777"
+                      },
+                      {
+                        "id": "893",
+                        "name": "Gregory",
+                        "surname": "Shaw",
+                        "email": "gshawos@dedecms.com",
+                        "country": "FR",
+                        "createdAt": "2015-12-02",
+                        "activatedAt": "2015-12-28",
+                        "chargerID": "893"
+                      },
+                      {
+                        "id": "336",
+                        "name": "Nicole",
+                        "surname": "Smith",
+                        "email": "nsmith9b@jimdo.com",
+                        "country": "FR",
+                        "createdAt": "2015-12-02",
+                        "activatedAt": "2015-12-29",
+                        "chargerID": "336"
+                      }
+                      ]
+                    }
+        '404':
+          description: |-
+            404 not found
+          content:
+            application/json:
+              examples:
+                empty-body:
+                  value:
+        '500':
+          description: |-
+            500 Server error
+          content:
+            application/json:
+              examples:
+                empty-body:
+                  value:
