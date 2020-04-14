@@ -4,7 +4,7 @@
 namespace App\Controller;
 
 use App\Application\ListUserRegistrationsService;
-use App\Application\ListUserRegistrationsServiceRefactored;
+use App\Infrastructure\ListUserRegistrationCsvRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,7 +19,8 @@ class UserRegistrationController extends AbstractController
     {
         // read csv file
         $csvLocation = $this->getParameter('app.user_list_csv_location');
-        $userRegistrationsList = new ListUserRegistrationsService($csvLocation);
+        $repository = new ListUserRegistrationCsvRepository($csvLocation);
+        $userRegistrationsList = new ListUserRegistrationsService($repository);
         // apply filters
         $filters = $request->query->all();
         $collection = $userRegistrationsList->query($filters);

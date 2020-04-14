@@ -5,11 +5,15 @@ namespace App\Tests\Application;
 
 
 use App\Application\ListUserRegistrationsService;
+use App\Infrastructure\ListUserRegistrationCsvRepository;
 use PHPUnit\Framework\TestCase;
 
 class ListUserRegistrationsServiceTest extends TestCase
 {
+    // Sample data
     const USER_LIST_FILE=__DIR__."/../Data/test.csv";
+
+    // Compiled expected results (ordered list of element ids, reordered incrementally to validate filters)
     const EXPECTED_ORDER=[7,11,2,12,1,8,13,9,5,10,6,3,4]; // compiled manually ndlr
     const EXPECTED_FILTERED_COUNTRIES_CN_JP=[5,7,9]; // incremental ids
     const EXPECTED_FILTERED_ACTIVATION_LENGTH_0=[1,2,3,4,5,6,7,8,9,10,11,12,13];
@@ -18,9 +22,14 @@ class ListUserRegistrationsServiceTest extends TestCase
     const EXPECTED_FILTERED_BOTH_CN_JP_5=[];
     const EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19=[7];
 
+    private function buildSampleService()
+    {
+        $repository = new ListUserRegistrationCsvRepository(self::USER_LIST_FILE);
+        return new ListUserRegistrationsService($repository);
+    }
     public function testListIsFullyLoaded()
     {
-        $service = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $service = $this->buildSampleService();
         $collection = $service->query();
 
         $this->assertCount(13, $collection->asArray(), "Parsed list has 13 elements");
@@ -28,7 +37,7 @@ class ListUserRegistrationsServiceTest extends TestCase
 
     public function testListIsOrdered()
     {
-        $service = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $service = $this->buildSampleService();
         $collection = $service->query();
 
         $orderedIds = array_column($collection->asArray(), 'id');
@@ -37,7 +46,7 @@ class ListUserRegistrationsServiceTest extends TestCase
 
     public function testListFiltersCountries()
     {
-        $service = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $service = $this->buildSampleService();
         $collection = $service->query(["countries"=>"JP,CN"]);
 
         $ids = array_column($collection->asArray(), 'id');
@@ -50,7 +59,7 @@ class ListUserRegistrationsServiceTest extends TestCase
      */
     public function testListFiltersNoCountry()
     {
-        $service = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $service = $this->buildSampleService();
         $collection = $service->query(["countries"=>""]);
 
         $this->assertEmpty($collection->asArray(), "Empty list of countries leads to empty list of users.");
@@ -61,7 +70,7 @@ class ListUserRegistrationsServiceTest extends TestCase
      */
     public function testListFiltersAllCountriesJPorCN()
     {
-        $service = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $service = $this->buildSampleService();
         $collection = $service->query(["countries"=>"JO,VN,RS,GR,CN,PH,MA,JP,SE,PL,US,AZ"]);
 
         $this->assertCount(13, $collection->asArray(), "Parsed list has 13 elements after filtering all existing countries");
@@ -72,7 +81,7 @@ class ListUserRegistrationsServiceTest extends TestCase
      */
     public function testListFiltersActivationLength0()
     {
-        $service = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $service = $this->buildSampleService();
         $collection = $service->query(["activation_length"=>0]);
 
         $this->assertCount(13, $collection->asArray(), "Parsed list has 13 elements after filtering activation length 0");
@@ -83,7 +92,7 @@ class ListUserRegistrationsServiceTest extends TestCase
      */
     public function testListFiltersActivationLength19()
     {
-        $service = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $service = $this->buildSampleService();
         $collection = $service->query(["activation_length"=>19]);
 
         $ids = array_column($collection->asArray(), 'id');
@@ -96,7 +105,7 @@ class ListUserRegistrationsServiceTest extends TestCase
      */
     public function testListFiltersActivationLength100()
     {
-        $service = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $service = $this->buildSampleService();
         $collection = $service->query(["activation_length"=>100]);
 
         $ids = array_column($collection->asArray(), 'id');
@@ -109,7 +118,7 @@ class ListUserRegistrationsServiceTest extends TestCase
      */
     public function testListFiltersActivationLength19AndCountriesJPorCN()
     {
-        $service = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $service = $this->buildSampleService();
         $collection = $service->query(["activation_length"=>19, "countries"=>"JP,CN"]);
         $ids = array_column($collection->asArray(), 'id');
         sort($ids);
@@ -121,7 +130,7 @@ class ListUserRegistrationsServiceTest extends TestCase
      */
     public function testConsecutiveQueriesAreIndependent()
     {
-        $service = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $service = $this->buildSampleService();
         $service->query([ "countries"=>"US"]);
         $collection = $service->query(["activation_length"=>19, "countries"=>"JP,CN"]);
         $ids = array_column($collection->asArray(), 'id');

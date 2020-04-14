@@ -3,9 +3,9 @@
 
 namespace App\Application;
 
+use App\Domain\ListUserRegistrationRepository;
 use App\Domain\UserRegistrationCollection;
 use App\Domain\UserRegistrationCriteria;
-use App\Infrastructure\ListUserRegistrationCsvRepository;
 
 class ListUserRegistrationsService
 {
@@ -15,9 +15,9 @@ class ListUserRegistrationsService
      * ListUserRegistrationsService constructor.
      * @param string $sourceFile location of csv file that we parse
      */
-    public function __construct(string $sourceFile)
+    public function __construct(ListUserRegistrationRepository $repository)
     {
-        $this->repository = new ListUserRegistrationCsvRepository($sourceFile);
+        $this->repository = $repository;
     }
 
     /**

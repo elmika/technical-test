@@ -5,10 +5,11 @@ namespace App\Infrastructure;
 
 
 use App\Domain\ListUserRegistrationRepository;
-use App\Domain\User;
-use App\Domain\UserRegistration;
 use App\Domain\UserRegistrationCollection;
 use App\Domain\UserRegistrationCriteria;
+
+use App\Domain\User;
+use App\Domain\UserRegistration;
 
 class ListUserRegistrationCsvRepository implements ListUserRegistrationRepository
 {
