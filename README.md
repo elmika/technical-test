@@ -17,11 +17,11 @@ El sistema de gestión de usuarios almacena la información en un archivo CSV 
 php -S 127.0.0.1:8000 -t public
 ```` 
 
-
-
 Run tests
 
 ./bin/phpunit
+
+Code coverage - pending.
 
 ### List users found in csv file:
 
@@ -60,7 +60,11 @@ We will use openapi format to describe our endpoint.
 
 - Application Service: all the logic is in this service.
 
-- DDD (pending):
+- DDD:
     - UserList should be an entity.
-    - User should be an Entity. Value objects may be used as attributes, especially emails and country codes.
-    - We need to define a repository interface, and implement it in the infrastucture layer with the logic of retrieving the data from the public csv file.
+    - User is implemented as Value object, but should probably be an Entity (you may have to update email)
+    - Value objects may be used as attributes, especially for emails and country codes.
+    - Repository interface defined in the Domain. Implemented in the infrastucture layer with the logic of retrieving the data from the public csv file.
+    - Criteria only contains logic for filtering. Could also do ordering.
+    
+- Exception handling - pending

@@ -4,10 +4,10 @@
 namespace App\Tests\Application;
 
 
-use App\Application\ListUsersService;
+use App\Application\ListUserRegistrationsService;
 use PHPUnit\Framework\TestCase;
 
-class ListUsersServiceTest extends TestCase
+class ListUserRegistrationsServiceTest extends TestCase
 {
     const USER_LIST_FILE=__DIR__."/../Data/test.csv";
     const EXPECTED_ORDER=[7,11,2,12,1,8,13,9,5,10,6,3,4]; // compiled manually ndlr
@@ -20,21 +20,21 @@ class ListUsersServiceTest extends TestCase
 
     public function testListIsFullyLoaded()
     {
-        $list = new ListUsersService(self::USER_LIST_FILE);
+        $list = new ListUserRegistrationsService(self::USER_LIST_FILE);
         $this->assertCount(13, $list->asArray(), "Parsed list has 13 elements");
     }
 
     public function testListIsOrdered()
     {
-        $list = new ListUsersService(self::USER_LIST_FILE);
+        $list = new ListUserRegistrationsService(self::USER_LIST_FILE);
         $orderedIds = array_column($list->asArray(), 'id');
         $this->assertTrue($orderedIds == self::EXPECTED_ORDER, "List is ordered by name and surname");
     }
 
     public function testListFiltersCountries()
     {
-        $list = new ListUsersService(self::USER_LIST_FILE);
-        $list->applyFilters(["countries"=>"JP,CN"]);
+        $list = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $list->query(["countries"=>"JP,CN"]);
         $ids = array_column($list->asArray(), 'id');
         sort($ids);
         $this->assertTrue($ids == self::EXPECTED_FILTERED_COUNTRIES_CN_JP, "JP and CN countries are filtered out correctly.");
@@ -45,8 +45,8 @@ class ListUsersServiceTest extends TestCase
      */
     public function testListFiltersNoCountry()
     {
-        $list = new ListUsersService(self::USER_LIST_FILE);
-        $list->applyFilters(["countries"=>""]);
+        $list = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $list->query(["countries"=>""]);
 
         $this->assertEmpty($list->asArray(), "Empty list of countries leads to empty list of users.");
     }
@@ -56,8 +56,8 @@ class ListUsersServiceTest extends TestCase
      */
     public function testListFiltersAllCountriesJPorCN()
     {
-        $list = new ListUsersService(self::USER_LIST_FILE);
-        $list->applyFilters(["countries"=>"JO,VN,RS,GR,CN,PH,MA,JP,SE,PL,US,AZ"]);
+        $list = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $list->query(["countries"=>"JO,VN,RS,GR,CN,PH,MA,JP,SE,PL,US,AZ"]);
         $this->assertCount(13, $list->asArray(), "Parsed list has 13 elements after filtering all existing countries");
     }
 
@@ -66,8 +66,8 @@ class ListUsersServiceTest extends TestCase
      */
     public function testListFiltersActivationLength0()
     {
-        $list = new ListUsersService(self::USER_LIST_FILE);
-        $list->applyFilters(["activation_length"=>0]);
+        $list = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $list->query(["activation_length"=>0]);
         $this->assertCount(13, $list->asArray(), "Parsed list has 13 elements after filtering activation length 0");
     }
 
@@ -76,8 +76,8 @@ class ListUsersServiceTest extends TestCase
      */
     public function testListFiltersActivationLength19()
     {
-        $list = new ListUsersService(self::USER_LIST_FILE);
-        $list->applyFilters(["activation_length"=>19]);
+        $list = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $list->query(["activation_length"=>19]);
         $ids = array_column($list->asArray(), 'id');
         sort($ids);
         $this->assertTrue($ids == self::EXPECTED_FILTERED_ACTIVATION_LENGTH_19, "Activation length of 19 days is filtered out correctly.");
@@ -88,8 +88,8 @@ class ListUsersServiceTest extends TestCase
      */
     public function testListFiltersActivationLength100()
     {
-        $list = new ListUsersService(self::USER_LIST_FILE);
-        $list->applyFilters(["activation_length"=>100]);
+        $list = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $list->query(["activation_length"=>100]);
         $ids = array_column($list->asArray(), 'id');
         sort($ids);
         $this->assertTrue($ids == self::EXPECTED_FILTERED_ACTIVATION_LENGTH_100, "Activation length of 100 days is filtered out correctly.");
@@ -100,9 +100,8 @@ class ListUsersServiceTest extends TestCase
      */
     public function testListFiltersActivationLength19AndCountriesJPorCN()
     {
-        $list = new ListUsersService(self::USER_LIST_FILE);
-        $list->applyFilters(["activation_length"=>19]);
-        $list->applyFilters(["countries"=>"JP,CN"]);
+        $list = new ListUserRegistrationsService(self::USER_LIST_FILE);
+        $list->query(["activation_length"=>19, "countries"=>"JP,CN"]);
         $ids = array_column($list->asArray(), 'id');
         sort($ids);
         $this->assertTrue($ids == self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19, "Activation length of 19 days is filtered out correctly.");
