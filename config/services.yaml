@@ -13,23 +13,23 @@ services:
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    App\:
+    TestOrg\:
         resource: '../src/*'
         exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
     # explicitly configure the service
-    App\Infrastructure\ListUserRegistrationCsvRepository:
+    TestOrg\Infrastructure\ListUserRegistrationCsvRepository:
         arguments:
             $sourceFile: '%app.user_list_csv_location%'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Controller\:
+    TestOrg\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\Infrastructure\EventListener\ExceptionListener:
+    TestOrg\Infrastructure\EventListener\ExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }

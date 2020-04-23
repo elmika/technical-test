@@ -1,18 +1,18 @@
 <?php
 
 
-namespace App\Application;
+namespace TestOrg\Application\Service;
 
-use App\Domain\ListUserRegistrationRepository;
-use App\Domain\UserRegistrationCollection;
-use App\Domain\UserRegistrationCriteria;
+use TestOrg\Domain\ListUserRegistrationRepository;
+use TestOrg\Domain\UserRegistrationCollection;
+use TestOrg\Domain\UserRegistrationCriteria;
 
-class ListUserRegistrationsService
+class ListUserRegistrations
 {
     private $repository;
 
     /**
-     * ListUserRegistrationsService constructor.
+     * ListUserRegistrations constructor.
      * @param string $sourceFile location of csv file that we parse
      */
     public function __construct(ListUserRegistrationRepository $repository)

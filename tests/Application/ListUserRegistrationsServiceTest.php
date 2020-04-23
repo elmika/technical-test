@@ -1,14 +1,14 @@
 <?php
 
 
-namespace App\Tests\Application;
+namespace TestOrg\Tests\Application;
 
 
-use App\Application\ListUserRegistrationsService;
-use App\Infrastructure\ListUserRegistrationCsvRepository;
+use TestOrg\Application\Service\ListUserRegistrations;
+use TestOrg\Infrastructure\ListUserRegistrationCsvRepository;
 use PHPUnit\Framework\TestCase;
 
-class ListUserRegistrationsServiceTest extends TestCase
+class ListUserRegistrationsTest extends TestCase
 {
     // Sample data
     const USER_LIST_FILE=__DIR__."/../Data/test.csv";
@@ -25,7 +25,7 @@ class ListUserRegistrationsServiceTest extends TestCase
     private function buildSampleService()
     {
         $repository = new ListUserRegistrationCsvRepository(self::USER_LIST_FILE);
-        return new ListUserRegistrationsService($repository);
+        return new ListUserRegistrations($repository);
     }
     public function testListIsFullyLoaded()
     {

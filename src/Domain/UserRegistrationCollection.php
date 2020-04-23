@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Domain;
+namespace TestOrg\Domain;
 
 class UserRegistrationCollection extends \ArrayObject
 {

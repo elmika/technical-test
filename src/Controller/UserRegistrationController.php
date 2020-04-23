@@ -1,9 +1,9 @@
 <?php
 
 
-namespace App\Controller;
+namespace TestOrg\Controller;
 
-use App\Application\ListUserRegistrationsService;
+use TestOrg\Application\Service\ListUserRegistrations;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,7 +14,7 @@ class UserRegistrationController extends AbstractController
     /**
      * @Route("/users", methods={"GET"}, )
      */
-    public function listUsers(Request $request, ListUserRegistrationsService $userRegistrationsList)
+    public function listUsers(Request $request, ListUserRegistrations $userRegistrationsList)
     {
         $filters = $request->query->all();
         $collection = $userRegistrationsList->query($filters);
