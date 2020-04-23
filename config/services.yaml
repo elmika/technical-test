@@ -17,6 +17,11 @@ services:
         resource: '../src/*'
         exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
+    # explicitly configure the service
+    App\Infrastructure\ListUserRegistrationCsvRepository:
+        arguments:
+            $sourceFile: '%app.user_list_csv_location%'
+
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
