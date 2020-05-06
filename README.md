@@ -1,14 +1,18 @@
 # Environment setup
 
-### Run local server
+### Run Docker container
 
 ````
-php -S 127.0.0.1:8000 -t public
+docker build -t "registration-exercise" .
+
+docker run --rm -p 8000:80 "registration-exercise"
 ```` 
 
 Run tests
 
-./bin/phpunit
+```` 
+docker exec -it amazing_saha bin/phpunit
+```` 
 
 ### Examples
 
@@ -49,7 +53,14 @@ Published on Swagger Hub: https://app.swaggerhub.com/apis/elmika/technical-test/
     - A Repository interface is defined in the Domain, implemented in the Infrastucture layer, used in the Application layer and instanciated in the Controller.
     - Criteria is used to apply modifying logic of the collection of registration. At the moment, it only contains logic for filtering.
 - Further possible steps:
+    - Testing: Use mocks for infrastructure objects
     - Value objects could be introduced as attributes, especially for emails and country codes.
-    - Introduce caching strategy to retrive csv (retrieve header with HEAD request and see if newer version has been published)
+    - Introduce caching strategy to retrieve csv (retrieve header with HEAD request and see if newer version has been published)
     - Introduce ordering logic in Criteria.
-    - Define app specific exceptions, introduce corresponding exception handling
+    - Define app (&domain) specific exceptions, introduce corresponding exception handling
+    - Build Docker container
+    - Introduce DTOs
+    - Split file reading and file parsing into 2 objects 
+        -> Reading is Repository responsibility, 
+        -> while Parsing would be DTO repsonsibility
+    - Introduce functional testing
