@@ -5,11 +5,13 @@ namespace TestOrg\Tests\Application;
 
 
 use TestOrg\Application\Service\ListUserRegistrations;
-use TestOrg\Infrastructure\ListUserRegistrationCsvRepository;
+use TestOrg\Infrastructure\ListUserRegistrationCsvRepository; // -> Should be mocked...
 use PHPUnit\Framework\TestCase;
 
 class ListUserRegistrationsTest extends TestCase
 {
+    private $service;
+
     // Sample data
     const USER_LIST_FILE=__DIR__."/../Data/test.csv";
 
@@ -22,23 +24,24 @@ class ListUserRegistrationsTest extends TestCase
     const EXPECTED_FILTERED_BOTH_CN_JP_5=[];
     const EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19=[7];
 
-    private function buildSampleService()
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $repository = new ListUserRegistrationCsvRepository(self::USER_LIST_FILE);
-        return new ListUserRegistrations($repository);
+        $this->service = new ListUserRegistrations($repository);
     }
+
     public function testListIsFullyLoaded()
     {
-        $service = $this->buildSampleService();
-        $collection = $service->query();
+        $collection = $this->service->query();
 
         $this->assertCount(13, $collection->asArray(), "Parsed list has 13 elements");
     }
 
     public function testListIsOrdered()
     {
-        $service = $this->buildSampleService();
-        $collection = $service->query();
+        $collection = $this->service->query();
 
         $orderedIds = array_column($collection->asArray(), 'id');
         $this->assertTrue($orderedIds == self::EXPECTED_ORDER, "List is ordered by name and surname");
@@ -46,8 +49,7 @@ class ListUserRegistrationsTest extends TestCase
 
     public function testListFiltersCountries()
     {
-        $service = $this->buildSampleService();
-        $collection = $service->query(["countries"=>"JP,CN"]);
+        $collection = $this->service->query(["countries"=>"JP,CN"]);
 
         $ids = array_column($collection->asArray(), 'id');
         sort($ids);
@@ -59,8 +61,7 @@ class ListUserRegistrationsTest extends TestCase
      */
     public function testListFiltersNoCountry()
     {
-        $service = $this->buildSampleService();
-        $collection = $service->query(["countries"=>""]);
+        $collection = $this->service->query(["countries"=>""]);
 
         $this->assertEmpty($collection->asArray(), "Empty list of countries leads to empty list of users.");
     }
@@ -70,8 +71,7 @@ class ListUserRegistrationsTest extends TestCase
      */
     public function testListFiltersAllCountriesJPorCN()
     {
-        $service = $this->buildSampleService();
-        $collection = $service->query(["countries"=>"JO,VN,RS,GR,CN,PH,MA,JP,SE,PL,US,AZ"]);
+        $collection = $this->service->query(["countries"=>"JO,VN,RS,GR,CN,PH,MA,JP,SE,PL,US,AZ"]);
 
         $this->assertCount(13, $collection->asArray(), "Parsed list has 13 elements after filtering all existing countries");
     }
@@ -81,8 +81,7 @@ class ListUserRegistrationsTest extends TestCase
      */
     public function testListFiltersActivationLength0()
     {
-        $service = $this->buildSampleService();
-        $collection = $service->query(["activation_length"=>0]);
+        $collection = $this->service->query(["activation_length"=>0]);
 
         $this->assertCount(13, $collection->asArray(), "Parsed list has 13 elements after filtering activation length 0");
     }
@@ -92,8 +91,7 @@ class ListUserRegistrationsTest extends TestCase
      */
     public function testListFiltersActivationLength19()
     {
-        $service = $this->buildSampleService();
-        $collection = $service->query(["activation_length"=>19]);
+        $collection = $this->service->query(["activation_length"=>19]);
 
         $ids = array_column($collection->asArray(), 'id');
         sort($ids);
@@ -105,8 +103,7 @@ class ListUserRegistrationsTest extends TestCase
      */
     public function testListFiltersActivationLength100()
     {
-        $service = $this->buildSampleService();
-        $collection = $service->query(["activation_length"=>100]);
+        $collection = $this->service->query(["activation_length"=>100]);
 
         $ids = array_column($collection->asArray(), 'id');
         sort($ids);
@@ -118,8 +115,7 @@ class ListUserRegistrationsTest extends TestCase
      */
     public function testListFiltersActivationLength19AndCountriesJPorCN()
     {
-        $service = $this->buildSampleService();
-        $collection = $service->query(["activation_length"=>19, "countries"=>"JP,CN"]);
+        $collection = $this->service->query(["activation_length"=>19, "countries"=>"JP,CN"]);
         $ids = array_column($collection->asArray(), 'id');
         sort($ids);
         $this->assertTrue($ids == self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19, "Activation length of 19 days is filtered out correctly.");
@@ -130,9 +126,8 @@ class ListUserRegistrationsTest extends TestCase
      */
     public function testConsecutiveQueriesAreIndependent()
     {
-        $service = $this->buildSampleService();
-        $service->query([ "countries"=>"US"]);
-        $collection = $service->query(["activation_length"=>19, "countries"=>"JP,CN"]);
+        $this->service->query([ "countries"=>"US"]);
+        $collection = $this->service->query(["activation_length"=>19, "countries"=>"JP,CN"]);
         $ids = array_column($collection->asArray(), 'id');
         sort($ids);
         $this->assertTrue($ids == self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19, "Activation length of 19 days is filtered out correctly.");
