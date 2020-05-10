@@ -21,14 +21,12 @@ class UserRegistrationCriteria
      */
     public function __construct(array $parameters)
     {
-        if(array_key_exists('countries', $parameters))
-        {
+        if (array_key_exists('countries', $parameters)) {
             $countries = explode(",", $parameters['countries']);
             $this->addCountriesFilter($countries);
         }
 
-        if(array_key_exists('activation_length', $parameters))
-        {
+        if (array_key_exists('activation_length', $parameters)) {
             $this->addActivationLengthFilter((int)$parameters['activation_length']);
         }
     }
@@ -63,16 +61,14 @@ class UserRegistrationCriteria
     public function validates(UserRegistration $registration):bool
     {
         // we are not a listed country
-        if($this->hasCountriesFilter()
-            && ! $registration->isWithinCountries($this->countries))
-        {
+        if ($this->hasCountriesFilter()
+            && ! $registration->isWithinCountries($this->countries)) {
             return false;
         }
 
         // we are below specified activation length
-        if($this->hasActivationLengthFilter()
-            && ! $registration->isOverActivationLength($this->activationLength) )
-        {
+        if ($this->hasActivationLengthFilter()
+            && ! $registration->isOverActivationLength($this->activationLength)) {
                 return false;
         }
 

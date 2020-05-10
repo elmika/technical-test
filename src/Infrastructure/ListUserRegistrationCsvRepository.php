@@ -3,7 +3,6 @@
 
 namespace TestOrg\Infrastructure;
 
-
 use TestOrg\Domain\ListUserRegistrationRepository;
 use TestOrg\Domain\UserRegistrationCollection;
 use TestOrg\Domain\UserRegistrationCriteria;
@@ -39,12 +38,11 @@ class ListUserRegistrationCsvRepository implements ListUserRegistrationRepositor
      * @param UserRegistrationCriteria $criteria - an empty criteria will do nothing
      * @return UserRegistrationCollection
      */
-    public function query(UserRegistrationCriteria $criteria=null):UserRegistrationCollection
+    public function query(UserRegistrationCriteria $criteria = null):UserRegistrationCollection
     {
         $this->read();
         $this->collection->sortListByNameAndSurname();
-        if(! is_null($criteria))
-        {
+        if (! is_null($criteria)) {
             $this->collection->applyFilterCriteria($criteria);
         }
 
@@ -58,8 +56,7 @@ class ListUserRegistrationCsvRepository implements ListUserRegistrationRepositor
     {
         $this->collection = new UserRegistrationCollection();
         $registrations = array_map('str_getcsv', file($this->sourceFile));
-        foreach($registrations as $line)
-        {
+        foreach ($registrations as $line) {
             // Create array with keys defined in headers
             $registration = array_combine(self::HEADERS, $line);
             $this->readLine($registration);

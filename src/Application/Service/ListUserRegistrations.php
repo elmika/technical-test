@@ -24,7 +24,7 @@ class ListUserRegistrations
      * * @param array $parameters with keys countries and activation_length for filtering
      * @return UserRegistrationCollection
      */
-    public function query(array $parameters=[]): UserRegistrationCollection
+    public function query(array $parameters = []): UserRegistrationCollection
     {
         $criteria = new UserRegistrationCriteria($parameters);
         return $this->repository->query($criteria);

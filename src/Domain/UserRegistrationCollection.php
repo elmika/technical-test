@@ -7,8 +7,7 @@ class UserRegistrationCollection extends \ArrayObject
 {
     public function offsetSet($index, $newValue)
     {
-        if (!is_a($newValue, UserRegistration::class))
-        {
+        if (!is_a($newValue, UserRegistration::class)) {
             throw new \InvalidArgumentException("Values in a User Registration Collection must be of type User Registration");
         }
 
@@ -18,10 +17,8 @@ class UserRegistrationCollection extends \ArrayObject
     public function applyFilterCriteria(UserRegistrationCriteria $criteria)
     {
         // This is a workaround for a ugly spl bug here...
-        foreach($this->getArrayCopy() as $key => $registration)
-        {
-            if(!$criteria->validates($registration))
-            {
+        foreach ($this->getArrayCopy() as $key => $registration) {
+            if (!$criteria->validates($registration)) {
                 $this->offsetUnset($key);
                 continue;
             }
@@ -47,8 +44,7 @@ class UserRegistrationCollection extends \ArrayObject
         /**
          * @var UserRegistration $registration
          */
-        foreach($this as $registration)
-        {
+        foreach ($this as $registration) {
             $result[] =$registration->asArray();
         }
 

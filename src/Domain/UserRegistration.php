@@ -3,7 +3,6 @@
 
 namespace TestOrg\Domain;
 
-
 class UserRegistration
 {
     private $id;
@@ -16,7 +15,7 @@ class UserRegistration
     {
         $this->id = $id;
         $this->user = $user;
-        $this->createdAt = $createdAt->setTime(0,0,0);
+        $this->createdAt = $createdAt->setTime(0, 0, 0);
     }
 
     /**
@@ -55,7 +54,7 @@ class UserRegistration
      */
     public function activate(string $chargerId, \DateTimeImmutable $activatedAt): self
     {
-        $this->activatedAt = $activatedAt->setTime(0,0,0);
+        $this->activatedAt = $activatedAt->setTime(0, 0, 0);
         $this->chargerId = $chargerId;
         return $this;
     }
@@ -87,13 +86,10 @@ class UserRegistration
      */
     public function isOverActivationLength(int $minLength): int
     {
-        if($this->isActivated())
-        {
+        if ($this->isActivated()) {
             $activatedAt = $this->activatedAt;
-        }
-        else
-        {
-            $activatedAt = (new \DateTimeImmutable())->setTime(0,0,0);
+        } else {
+            $activatedAt = (new \DateTimeImmutable())->setTime(0, 0, 0);
         }
 
         $activationLengthDays = (int)$activatedAt->diff($this->createdAt)->format('%a');
@@ -132,8 +128,7 @@ class UserRegistration
             "createdAt" => $this->getCreatedAt()->format("Y-m-d")
         ];
 
-        if($this->isActivated())
-        {
+        if ($this->isActivated()) {
             $array["activatedAt"] = $this->getActivatedAt()->format("Y-m-d");
             $array["chargerID"] = $this->getChargerId();
         }
