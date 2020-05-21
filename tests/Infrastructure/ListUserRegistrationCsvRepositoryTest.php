@@ -1,10 +1,11 @@
 <?php
 
 
-namespace TestOrg\Infrastructure;
+namespace TestOrg\Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 use TestOrg\Domain\UserRegistrationCriteria;
+use TestOrg\Infrastructure\ListUserRegistrationCsvRepository;
 
 class ListUserRegistrationCsvRepositoryTest extends TestCase
 {
@@ -36,7 +37,9 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
         return $this->repository->query($criteria);
     }
 
-    /* @test */
+    /**
+     * @test
+     */
     public function it_should_return_the_full_list_if_no_filter_is_specified()
     {
         $collection = $this->executeQueryWithParameters();
@@ -44,7 +47,9 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
         $this->assertCount(13, $collection->asArray(), "Parsed list has 13 elements");
     }
 
-    /* @test */
+    /**
+     * @test
+     */
     public function it_should_order_list_elements_by_name_and_surname()
     {
         $collection = $this->executeQueryWithParameters();
@@ -53,7 +58,9 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
         $this->assertTrue($orderedIds == self::EXPECTED_ORDER, "List is ordered by name and surname");
     }
 
-    /* @test */
+    /**
+     * @test
+     */
     public function it_should_filter_countries_specified_in_coutries_filter()
     {
         $collection = $this->executeQueryWithParameters(["countries"=>"JP,CN"]);
