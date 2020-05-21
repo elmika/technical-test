@@ -8,3 +8,9 @@ rebuild: ## ReBuild the container
 
 test:
 	docker exec -it simple_person bin/phpunit
+
+sniff:
+	php vendor/bin/phpcs --standard=PSR2 src
+
+sniff-and-fix:
+	php vendor/bin/phpcbf --standard=PSR2 src
