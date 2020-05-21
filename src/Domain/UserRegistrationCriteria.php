@@ -22,7 +22,11 @@ class UserRegistrationCriteria
     public function __construct(array $parameters)
     {
         if (array_key_exists('countries', $parameters)) {
-            $countries = explode(",", $parameters['countries']);
+            if (is_array($parameters["countries"])) {
+                $countries = $parameters["countries"];
+            }else{
+                $countries = explode(",", $parameters['countries']);
+            }
             $this->addCountriesFilter($countries);
         }
 
