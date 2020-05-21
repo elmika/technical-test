@@ -24,7 +24,7 @@ class UserRegistrationCriteria
         if (array_key_exists('countries', $parameters)) {
             if (is_array($parameters["countries"])) {
                 $countries = $parameters["countries"];
-            }else{
+            } else {
                 $countries = explode(",", $parameters['countries']);
             }
             $this->addCountriesFilter($countries);

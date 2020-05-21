@@ -8,7 +8,9 @@ class UserRegistrationCollection extends \ArrayObject
     public function offsetSet($index, $newValue)
     {
         if (!is_a($newValue, UserRegistration::class)) {
-            throw new \InvalidArgumentException("Values in a User Registration Collection must be of type User Registration");
+            throw new \InvalidArgumentException(
+                "Values in a User Registration Collection must be of type User Registration"
+            );
         }
 
         parent::offsetSet($index, $newValue);
