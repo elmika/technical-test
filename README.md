@@ -5,13 +5,13 @@
 ````
 docker build -t "registration-exercise" .
 
-docker run --rm -p 8000:80 "registration-exercise"
+docker run --rm -p 8000:80 --name=simple_person "registration-exercise"
 ```` 
 
 Run tests
 
 ```` 
-docker exec -it amazing_saha bin/phpunit
+docker exec -it simple_person bin/phpunit
 ```` 
 
 ### Examples

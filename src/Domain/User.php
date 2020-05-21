@@ -3,7 +3,6 @@
 
 namespace TestOrg\Domain;
 
-
 class User
 {
     private $name;
@@ -53,10 +52,9 @@ class User
     
     public function compareTo($b)
     {
-        if($this->surname == $b->getSurname()) {
+        if ($this->surname == $b->getSurname()) {
             return strcmp($this->name, $b->getName());
         }
         return strcmp($this->surname, $b->getSurname());
     }
-
 }
