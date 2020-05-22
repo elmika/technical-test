@@ -13,7 +13,7 @@ class ListUserRegistrations
 
     /**
      * ListUserRegistrations constructor.
-     * @param string $sourceFile location of csv file that we parse
+     * @param ListUserRegistrationRepository $repository
      */
     public function __construct(ListUserRegistrationRepository $repository)
     {
@@ -21,12 +21,11 @@ class ListUserRegistrations
     }
 
     /**
-     * * @param array $parameters with keys countries and activation_length for filtering
+     * @param UserRegistrationCriteria $criteria
      * @return UserRegistrationCollection
      */
-    public function query(array $parameters = []): UserRegistrationCollection
+    public function query(UserRegistrationCriteria $criteria): UserRegistrationCollection
     {
-        $criteria = new UserRegistrationCriteria($parameters);
         return $this->repository->query($criteria);
     }
 }

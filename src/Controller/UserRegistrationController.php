@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use TestOrg\Domain\UserRegistrationCriteria;
 
 class UserRegistrationController extends AbstractController
 {
@@ -16,7 +17,7 @@ class UserRegistrationController extends AbstractController
      */
     public function listUsers(Request $request, ListUserRegistrations $userRegistrationsList)
     {
-        $filters = $request->query->all();
+        $filters = new UserRegistrationCriteria($request->query->all());
         $collection = $userRegistrationsList->query($filters);
 
         // respond as json
