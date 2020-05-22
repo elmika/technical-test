@@ -3,22 +3,17 @@
 
 namespace TestOrg\Infrastructure;
 
+use App\Infrastructure\UserRegistrationAdapter;
+use App\Infrastructure\UserRegistrationDTOAdapter;
+
 use TestOrg\Domain\ListUserRegistrationRepository;
 use TestOrg\Domain\UserRegistrationCollection;
 use TestOrg\Domain\UserRegistrationCriteria;
 
-use TestOrg\Domain\User;
-use TestOrg\Domain\UserRegistration;
-
 class ListUserRegistrationCsvRepository implements ListUserRegistrationRepository
 {
-    const HEADERS = ["id", "name", "surname", "email", "country", "createdAt", "activatedAt", "chargerID"];
-    private $sourceFile;
-
-    /**
-     * @var UserRegistrationCollection
-     */
-    private $collection;
+    private string $sourceFile;
+    private UserRegistrationCollection $collection;
 
     /**
      * ListUserRegistrationCsvRepository constructor.
@@ -55,36 +50,16 @@ class ListUserRegistrationCsvRepository implements ListUserRegistrationRepositor
     private function read()
     {
         $this->collection = new UserRegistrationCollection();
-        $registrations = array_map('str_getcsv', file($this->sourceFile));
+        $registrations = file($this->sourceFile);
+
         foreach ($registrations as $line) {
-            // Create array with keys defined in headers
-            $registration = array_combine(self::HEADERS, $line);
-            $this->readLine($registration);
+            try {
+                $dto = UserRegistrationDTOAdapter::fromCSV($line);
+                $userRegistration = UserRegistrationAdapter::fromDTO($dto);
+                $this->collection->append($userRegistration);
+            } catch (\Exception $e) {
+                error_log("Problem importing the following line from csv: ".$line);
+            }
         }
-    }
-
-    /**
-     * @param array $registration associative array with keys defined in self::HEADERS
-     * @throws \Exception
-     */
-    private function readLine(array $registration)
-    {
-        $user = new User(
-            $registration["name"],
-            $registration["surname"],
-            $registration["email"],
-            $registration["country"]
-        );
-
-        $userRegistration = (new UserRegistration(
-            $registration["id"],
-            $user,
-            new \DateTimeImmutable($registration["createdAt"])
-        ))->activate(
-            $registration["chargerID"],
-            new \DateTimeImmutable($registration["activatedAt"])
-        );
-
-        $this->collection->append($userRegistration);
     }
 }
