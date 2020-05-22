@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TestOrg\Controller;
+namespace TestOrg\Infrastructure\Controller;
 
 use App\Infrastructure\UserRegistrationCollectionMarshaller;
 use TestOrg\Application\Service\ListUserRegistrations;
