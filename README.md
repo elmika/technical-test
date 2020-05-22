@@ -21,6 +21,16 @@ Run tests
 make tests
 ```` 
 
+Review and fix identation
+
+```` 
+make sniff
+````
+
+```` 
+make clean
+````  
+
 ### Examples
 
 ````
@@ -59,9 +69,11 @@ Published on Swagger Hub: https://app.swaggerhub.com/apis/elmika/technical-test/
     - UserRegistrationCollection is a list of UserRegistration and contains logic for filtering and ordering.
     - A Repository interface is defined in the Domain, implemented in the Infrastucture layer, used in the Application layer and instanciated in the Controller.
     - Criteria is used to apply modifying logic of the collection of registration. At the moment, it only contains logic for filtering.
+- Project:
     - Testing: Use mockery to mock infrastructure objects in domain object unit testing.
     - Testing: Functional testing checks filtering functionalities agains a local file (which is a tradeoff integration test).
     - Docker container is set up to run in development environment (it runs the dev server from the command line)
+    - Code identation review and fix made available (needs php installed locally).
 - Further possible steps:
     - Value objects could be introduced as attributes, especially for emails and country codes.
     - Introduce caching strategy to retrieve csv (retrieve header with HEAD request and see if newer version has been published)

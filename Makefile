@@ -11,7 +11,7 @@ test:
 sniff:
 	php vendor/bin/phpcs --standard=PSR2 src
 
-sniff-and-fix:
+clean:
 	php vendor/bin/phpcbf --standard=PSR2 src
 
 logs:
