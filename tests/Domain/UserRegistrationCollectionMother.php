@@ -13,4 +13,15 @@ class UserRegistrationCollectionMother
             [UserRegistrationMother::dummy()]
         );
     }
+
+    public static function multipleUsers($number = 10)
+    {
+        $list = [];
+        for ($k = 0; $k < $number; $k++) {
+            $list[] = UserRegistrationMother::random();
+        }
+        return new UserRegistrationCollection(
+            $list
+        );
+    }
 }

@@ -73,7 +73,7 @@ class ListUserRegistrationsServiceTest extends TestCase
 
     private function shouldExecuteQueryWith(UserRegistrationCriteria $criteria)
     {
-        $dummyReturnValue = UserRegistrationCollectionMother::singleUser();
+        $dummyReturnValue = UserRegistrationCollectionMother::multipleUsers();
 
         $this->repository()
              ->shouldReceive('query')
