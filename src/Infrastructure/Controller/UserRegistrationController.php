@@ -1,8 +1,9 @@
 <?php
 
 
-namespace TestOrg\Controller;
+namespace TestOrg\Infrastructure\Controller;
 
+use App\Infrastructure\UserRegistrationCollectionMarshaller;
 use TestOrg\Application\Service\ListUserRegistrations;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,6 +22,8 @@ class UserRegistrationController extends AbstractController
         $collection = $userRegistrationsList->query($filters);
 
         // respond as json
-        return new JsonResponse(["items" => $collection->asArray()]);
+        return new JsonResponse(
+            UserRegistrationCollectionMarshaller::toArray($collection)
+        );
     }
 }

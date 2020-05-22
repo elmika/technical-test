@@ -34,22 +34,4 @@ class UserRegistrationCollection extends \ArrayObject
     {
         $this->uasort([UserRegistration::class, "compareUsers"]);
     }
-
-    /**
-     * @return array ready to be displayed as json in the Response
-     * @todo Build a DTO for that
-     */
-    public function asArray()
-    {
-        $result = [];
-
-        /**
-         * @var UserRegistration $registration
-         */
-        foreach ($this as $registration) {
-            $result[] =$registration->asArray();
-        }
-
-        return $result;
-    }
 }
