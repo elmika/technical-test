@@ -4,21 +4,21 @@
 namespace TestOrg\Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
+use TestOrg\Domain\UserRegistrationCollection;
 use TestOrg\Domain\UserRegistrationCriteria;
 use TestOrg\Infrastructure\ListUserRegistrationCsvRepository;
 
 class ListUserRegistrationCsvRepositoryTest extends TestCase
 {
     // private $service;
-    private $repository;
+    private ListUserRegistrationCsvRepository $repository;
 
     // Sample data
     const USER_LIST_FILE=__DIR__."/../Data/test.csv";
 
     // Compiled expected results (ordered list of element ids, reordered incrementally to validate filters)
     const EXPECTED_ORDER=[7,11,2,12,1,8,13,9,5,10,6,3,4]; // compiled manually ndlr
-    const EXPECTED_FILTERED_COUNTRIES_CN_JP=[5,7,9]; // incremental ids
-    const EXPECTED_FILTERED_ACTIVATION_LENGTH_0=[1,2,3,4,5,6,7,8,9,10,11,12,13];
+    const EXPECTED_FILTERED_COUNTRIES_CN_JP=[5,7,9];
     const EXPECTED_FILTERED_ACTIVATION_LENGTH_19=[1,7,13];
     const EXPECTED_FILTERED_ACTIVATION_LENGTH_100=[];
     const EXPECTED_FILTERED_BOTH_CN_JP_5=[];
@@ -31,10 +31,59 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
         $this->repository = new ListUserRegistrationCsvRepository(self::USER_LIST_FILE);
     }
 
-    private function executeQueryWithParameters($parameters=[])
+    private function executeQueryWithParameters($parameters = []) : UserRegistrationCollection
     {
         $criteria = new UserRegistrationCriteria($parameters);
         return $this->repository->query($criteria);
+    }
+
+    private function collectionMatches(UserRegistrationCollection $collection, array $expectedIds) : bool
+    {
+        foreach ($collection as $element) {
+            $id = array_shift($expectedIds);
+            if (! $element->hasId($id)) {
+                return false;
+            }
+        }
+        return count($expectedIds) == 0;
+    }
+
+    /**
+     * Find if an element is in an array, and remove it if found
+     *
+     * @param int $element to search for
+     * @param array $array that possibly contains element
+     * @return bool true if element has been found and removed
+     */
+    private function findAndRemove(int $element, array &$array) : bool
+    {
+        $pos = array_search($element, $array);
+        if ($pos === false) {
+            return false;
+        }
+        unset($array[$pos]);
+        return true;
+    }
+
+    /**
+     * Check if unordered lists are a match
+     *
+     * @param UserRegistrationCollection $collection
+     * @param array $expectedIds
+     * @return bool
+     */
+    private function collectionContains(UserRegistrationCollection $collection, array $expectedIds) : bool
+    {
+        foreach ($collection as $registration) {
+            if (! $this->findAndRemove(
+                $registration->getId(),
+                $expectedIds
+            )) {
+                return false;
+            }
+        }
+
+        return count($expectedIds) == 0;
     }
 
     /**
@@ -44,7 +93,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     {
         $collection = $this->executeQueryWithParameters();
 
-        $this->assertCount(13, $collection->asArray(), "Parsed list has 13 elements");
+        $this->assertTrue(
+            13 == $collection->count(),
+            "Parsed list has 13 elements"
+        );
     }
 
     /**
@@ -54,8 +106,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     {
         $collection = $this->executeQueryWithParameters();
 
-        $orderedIds = array_column($collection->asArray(), 'id');
-        $this->assertTrue($orderedIds == self::EXPECTED_ORDER, "List is ordered by name and surname");
+        $this->assertTrue(
+            $this->collectionMatches($collection, self::EXPECTED_ORDER),
+            "List is ordered by name and surname"
+        );
     }
 
     /**
@@ -65,9 +119,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     {
         $collection = $this->executeQueryWithParameters(["countries"=>"JP,CN"]);
 
-        $ids = array_column($collection->asArray(), 'id');
-        sort($ids);
-        $this->assertTrue($ids == self::EXPECTED_FILTERED_COUNTRIES_CN_JP, "JP and CN countries are filtered correctly.");
+        $this->assertTrue(
+            $this->collectionContains($collection, self::EXPECTED_FILTERED_COUNTRIES_CN_JP),
+            "JP and CN countries are filtered correctly."
+        );
     }
 
     /**
@@ -78,7 +133,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     {
         $collection = $this->executeQueryWithParameters(["countries"=>""]);
 
-        $this->assertEmpty($collection->asArray(), "Empty list of countries leads to empty list of users.");
+        $this->assertTrue(
+            0 == $collection->count(),
+            "Empty list of countries leads to empty list of users."
+        );
     }
 
     /**
@@ -89,7 +147,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     {
         $collection = $this->executeQueryWithParameters(["countries"=>"JO,VN,RS,GR,CN,PH,MA,JP,SE,PL,US,AZ"]);
 
-        $this->assertCount(13, $collection->asArray(), "Parsed list has 13 elements after filtering all existing countries");
+        $this->assertTrue(
+            13 == $collection->count(),
+            "Parsed list has 13 elements after filtering all existing countries"
+        );
     }
 
     /**
@@ -100,7 +161,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     {
         $collection = $this->executeQueryWithParameters(["activation_length"=>0]);
 
-        $this->assertCount(13, $collection->asArray(), "Parsed list has 13 elements after filtering activation length 0");
+        $this->assertTrue(
+            13 == $collection->count(),
+            "Parsed list has 13 elements after filtering activation length 0"
+        );
     }
 
     /**
@@ -110,10 +174,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     public function it_should_apply_filter_correctly_when_activation_length_is_19_days()
     {
         $collection = $this->executeQueryWithParameters(["activation_length"=>19]);
-
-        $ids = array_column($collection->asArray(), 'id');
-        sort($ids);
-        $this->assertTrue($ids == self::EXPECTED_FILTERED_ACTIVATION_LENGTH_19, "Activation length of 19 days is filtered out correctly.");
+        $this->assertTrue(
+            $this->collectionContains($collection, self::EXPECTED_FILTERED_ACTIVATION_LENGTH_19),
+            "Activation length of 19 days is filtered out correctly."
+        );
     }
 
     /**
@@ -124,9 +188,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     {
         $collection = $this->executeQueryWithParameters(["activation_length"=>100]);
 
-        $ids = array_column($collection->asArray(), 'id');
-        sort($ids);
-        $this->assertTrue($ids == self::EXPECTED_FILTERED_ACTIVATION_LENGTH_100, "Activation length of 100 days is filtered out correctly.");
+        $this->assertTrue(
+            $this->collectionContains($collection, self::EXPECTED_FILTERED_ACTIVATION_LENGTH_100),
+            "Activation length of 100 days is filtered out correctly."
+        );
     }
 
     /**
@@ -136,9 +201,11 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     public function it_should_combine_filters_correctly()
     {
         $collection = $this->executeQueryWithParameters(["activation_length"=>19, "countries"=>"JP,CN"]);
-        $ids = array_column($collection->asArray(), 'id');
-        sort($ids);
-        $this->assertTrue($ids == self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19, "Activation length of 19 days is filtered out correctly.");
+
+        $this->assertTrue(
+            $this->collectionContains($collection, self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19),
+            "Activation length of 19 days is filtered out correctly."
+        );
     }
 
     /**
@@ -149,8 +216,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     {
         $this->executeQueryWithParameters([ "countries"=>"US"]);
         $collection = $this->executeQueryWithParameters(["activation_length"=>19, "countries"=>"JP,CN"]);
-        $ids = array_column($collection->asArray(), 'id');
-        sort($ids);
-        $this->assertTrue($ids == self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19, "Activation length of 19 days is filtered out correctly.");
+
+        $this->assertTrue(
+            $this->collectionContains($collection, self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19),
+            "Activation length of 19 days is filtered out correctly."
+        );
     }
 }

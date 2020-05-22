@@ -3,7 +3,7 @@
 
 namespace App\Infrastructure;
 
-class UserRegistrationDTO
+class UserRegistrationDTO implements \JsonSerializable
 {
     private int $id;
     private string $name;
@@ -96,5 +96,24 @@ class UserRegistrationDTO
     public function getChargerID(): int
     {
         return $this->chargerID;
+    }
+
+    public function jsonSerialize()
+    {
+        $array = [
+            "id" => $this->id,
+            "name" => $this->name,
+            "surname" => $this->surname,
+            "email" => $this->email,
+            "country" => $this->country,
+            "createdAt" => $this->createdAt
+        ];
+
+        if (! is_null($this->activatedAt)) {
+            $array["activatedAt"] = $this->activatedAt;
+            $array["chargerID"] = $this->chargerID;
+        }
+
+        return $array;
     }
 }

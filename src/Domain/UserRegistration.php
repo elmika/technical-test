@@ -26,6 +26,10 @@ class UserRegistration
         return $this->id;
     }
 
+    public function hasId(int $id) : bool
+    {
+        return $this->id === $id;
+    }
     /**
      * @return User
      */
@@ -115,24 +119,5 @@ class UserRegistration
     public static function compareUsers(UserRegistration $a, UserRegistration $b)
     {
         return $a->getUser()->compareTo($b->getUser());
-    }
-
-    public function asArray() : array
-    {
-        $array = [
-            "id" => $this->getId(),
-            "name" =>  $this->getUser()->getName(),
-            "surname" => $this->getUser()->getSurname(),
-            "email" => $this->getUser()->getEmail(),
-            "country" => $this->getUser()->getCountryCode(),
-            "createdAt" => $this->getCreatedAt()->format("Y-m-d")
-        ];
-
-        if ($this->isActivated()) {
-            $array["activatedAt"] = $this->getActivatedAt()->format("Y-m-d");
-            $array["chargerID"] = $this->getChargerId();
-        }
-
-        return $array;
     }
 }
