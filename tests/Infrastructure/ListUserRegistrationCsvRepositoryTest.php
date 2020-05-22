@@ -7,11 +7,14 @@ use PHPUnit\Framework\TestCase;
 use TestOrg\Domain\UserRegistrationCollection;
 use TestOrg\Domain\UserRegistrationCriteria;
 use TestOrg\Infrastructure\ListUserRegistrationCsvRepository;
+use TestOrg\Tests\Domain\UserRegistrationCriteriaMother;
 
 class ListUserRegistrationCsvRepositoryTest extends TestCase
 {
     // private $service;
     private ListUserRegistrationCsvRepository $repository;
+    private UserRegistrationCollection $collection;
+    private UserRegistrationCriteria $criteria;
 
     // Sample data
     const USER_LIST_FILE=__DIR__."/../Data/test.csv";
@@ -29,17 +32,19 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
         parent::setUp();
 
         $this->repository = new ListUserRegistrationCsvRepository(self::USER_LIST_FILE);
+        $this->collection = new UserRegistrationCollection();
+        $this->criteria = UserRegistrationCriteriaMother::empty();
     }
 
-    private function executeQueryWithParameters($parameters = []) : UserRegistrationCollection
+    private function executeQueryWithParameters($parameters = []) : void
     {
         $criteria = new UserRegistrationCriteria($parameters);
-        return $this->repository->query($criteria);
+        $this->collection =  $this->repository->query($criteria);
     }
 
-    private function collectionMatches(UserRegistrationCollection $collection, array $expectedIds) : bool
+    private function collectionMatches(array $expectedIds) : bool
     {
-        foreach ($collection as $element) {
+        foreach ($this->collection as $element) {
             $id = array_shift($expectedIds);
             if (! $element->hasId($id)) {
                 return false;
@@ -72,9 +77,9 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
      * @param array $expectedIds
      * @return bool
      */
-    private function collectionContains(UserRegistrationCollection $collection, array $expectedIds) : bool
+    private function collectionContains(array $expectedIds) : bool
     {
-        foreach ($collection as $registration) {
+        foreach ($this->collection as $registration) {
             if (! $this->findAndRemove(
                 $registration->getId(),
                 $expectedIds
@@ -91,10 +96,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
      */
     public function it_should_return_the_full_list_if_no_filter_is_specified()
     {
-        $collection = $this->executeQueryWithParameters();
+        $this->executeQueryWithParameters();
 
         $this->assertTrue(
-            13 == $collection->count(),
+            13 == $this->collection->count(),
             "Parsed list has 13 elements"
         );
     }
@@ -104,10 +109,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
      */
     public function it_should_order_list_elements_by_name_and_surname()
     {
-        $collection = $this->executeQueryWithParameters();
+        $this->executeQueryWithParameters();
 
         $this->assertTrue(
-            $this->collectionMatches($collection, self::EXPECTED_ORDER),
+            $this->collectionMatches(self::EXPECTED_ORDER),
             "List is ordered by name and surname"
         );
     }
@@ -117,10 +122,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
      */
     public function it_should_filter_countries_specified_in_coutries_filter()
     {
-        $collection = $this->executeQueryWithParameters(["countries"=>"JP,CN"]);
+        $this->executeQueryWithParameters(["countries"=>"JP,CN"]);
 
         $this->assertTrue(
-            $this->collectionContains($collection, self::EXPECTED_FILTERED_COUNTRIES_CN_JP),
+            $this->collectionContains(self::EXPECTED_FILTERED_COUNTRIES_CN_JP),
             "JP and CN countries are filtered correctly."
         );
     }
@@ -131,10 +136,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
      */
     public function it_should_return_empty_list_when_country_filter_is_set_to_empty_list()
     {
-        $collection = $this->executeQueryWithParameters(["countries"=>""]);
+        $this->executeQueryWithParameters(["countries"=>""]);
 
         $this->assertTrue(
-            0 == $collection->count(),
+            0 == $this->collection->count(),
             "Empty list of countries leads to empty list of users."
         );
     }
@@ -145,10 +150,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
      */
     public function it_should_return_all_registrations_when_country_filter_contains_all_countries()
     {
-        $collection = $this->executeQueryWithParameters(["countries"=>"JO,VN,RS,GR,CN,PH,MA,JP,SE,PL,US,AZ"]);
+        $this->executeQueryWithParameters(["countries"=>"JO,VN,RS,GR,CN,PH,MA,JP,SE,PL,US,AZ"]);
 
         $this->assertTrue(
-            13 == $collection->count(),
+            13 == $this->collection->count(),
             "Parsed list has 13 elements after filtering all existing countries"
         );
     }
@@ -159,10 +164,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
      */
     public function it_should_return_all_registrations_when_activation_length_filter_is_0()
     {
-        $collection = $this->executeQueryWithParameters(["activation_length"=>0]);
+        $this->executeQueryWithParameters(["activation_length"=>0]);
 
         $this->assertTrue(
-            13 == $collection->count(),
+            13 == $this->collection->count(),
             "Parsed list has 13 elements after filtering activation length 0"
         );
     }
@@ -173,9 +178,9 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
      */
     public function it_should_apply_filter_correctly_when_activation_length_is_19_days()
     {
-        $collection = $this->executeQueryWithParameters(["activation_length"=>19]);
+        $this->executeQueryWithParameters(["activation_length"=>19]);
         $this->assertTrue(
-            $this->collectionContains($collection, self::EXPECTED_FILTERED_ACTIVATION_LENGTH_19),
+            $this->collectionContains(self::EXPECTED_FILTERED_ACTIVATION_LENGTH_19),
             "Activation length of 19 days is filtered out correctly."
         );
     }
@@ -186,10 +191,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
      */
     public function it_should_show_all_registrations_when_activation_lenght_filter_is_100()
     {
-        $collection = $this->executeQueryWithParameters(["activation_length"=>100]);
+        $this->executeQueryWithParameters(["activation_length"=>100]);
 
         $this->assertTrue(
-            $this->collectionContains($collection, self::EXPECTED_FILTERED_ACTIVATION_LENGTH_100),
+            $this->collectionContains(self::EXPECTED_FILTERED_ACTIVATION_LENGTH_100),
             "Activation length of 100 days is filtered out correctly."
         );
     }
@@ -200,10 +205,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
      */
     public function it_should_combine_filters_correctly()
     {
-        $collection = $this->executeQueryWithParameters(["activation_length"=>19, "countries"=>"JP,CN"]);
+        $this->executeQueryWithParameters(["activation_length"=>19, "countries"=>"JP,CN"]);
 
         $this->assertTrue(
-            $this->collectionContains($collection, self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19),
+            $this->collectionContains(self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19),
             "Activation length of 19 days is filtered out correctly."
         );
     }
@@ -215,10 +220,10 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     public function it_should_execute_consecutive_queries_independently()
     {
         $this->executeQueryWithParameters([ "countries"=>"US"]);
-        $collection = $this->executeQueryWithParameters(["activation_length"=>19, "countries"=>"JP,CN"]);
+        $this->executeQueryWithParameters(["activation_length"=>19, "countries"=>"JP,CN"]);
 
         $this->assertTrue(
-            $this->collectionContains($collection, self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19),
+            $this->collectionContains(self::EXPECTED_FILTERED_COUNTRIES_CN_JP_AND_ACTIVATION_LENGTH_19),
             "Activation length of 19 days is filtered out correctly."
         );
     }
