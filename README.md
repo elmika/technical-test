@@ -11,7 +11,7 @@ docker run --rm -p 8000:80 --name=simple_person "registration-exercise"
 
 In dev
 ````
-docker-compose rebuild
+make rebuild
 ````
 
 
@@ -71,6 +71,7 @@ Published on Swagger Hub: https://app.swaggerhub.com/apis/elmika/technical-test/
     - A Repository interface is defined in the Domain, implemented in the Infrastucture layer, used in the Application layer and instanciated in the Controller.
     - Criteria is used to apply modifying logic of the collection of registration. At the moment, it only contains logic for filtering.
     - Introduced DTOs in Infrastructure.
+    - Controller in Infrastructure folder.
 
 - Project:
     - Testing: Use mockery to mock infrastructure objects in domain object unit testing.
@@ -80,10 +81,10 @@ Published on Swagger Hub: https://app.swaggerhub.com/apis/elmika/technical-test/
     - Code identation review and fix made available (needs php installed locally).
 
 - Further possible steps:
-    - Value objects could be introduced as attributes, especially for emails and country codes.
-    - Introduce caching strategy to retrieve csv (retrieve header with HEAD request and see if newer version has been published)
+    - Introduce Value objects: uuid, emails, country codes, etc.
+    - Introduce acceptance tests with Behat    
     - Move ordering logic into Criteria.
-    - Define app (&domain) specific exceptions, introduce corresponding exception handling
-    - Set up proper nginx server in the Docker container. Configure to run with symfony.           
-    - Introduce acceptance tests with Behat
-    - Move controllers in Infrastructure folder
+    - Exception handling: Define app (&domain) specific exceptions
+    - Docker setup: Set up proper nginx server to work with Symfony.           
+    - Introduce caching strategy to retrieve csv (retrieve header with HEAD request and see if newer version has been published)
+    - Fork and see how we can use Tactician to introduce CQRS.

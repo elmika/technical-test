@@ -3,6 +3,10 @@
 
 namespace TestOrg\Tests\Domain;
 
+use App\Domain\ValueObject\CountryCode;
+use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\Name;
+use App\Domain\ValueObject\Surname;
 use Faker\Factory;
 use Faker\Generator;
 use Faker\Provider\Internet;
@@ -26,10 +30,10 @@ class UserMother
     public static function dummy()
     {
         return new User(
-            "Bob",
-            "Carr",
-            "bob@carr.com",
-            "ES"
+            new Name("Bob"),
+            new Surname("Carr"),
+            new Email("bob@carr.com"),
+            new CountryCode("ES")
         );
     }
 
@@ -43,26 +47,31 @@ class UserMother
         );
     }
 
-    protected static function getRandomName(): string
+    protected static function getRandomName(): Name
     {
-        return
+        return new Name(
             rand(0, 1) ?
             Person::firstNameFemale() :
-            Person::firstNameMale();
+            Person::firstNameMale()
+        );
     }
 
-    protected static function getRandomSurname(): string
+    protected static function getRandomSurname(): Surname
     {
-        return self::faker()->lastName;
+        return new Surname(self::faker()->lastName);
     }
 
-    protected static function getRandomEmail(): string
+    protected static function getRandomEmail(): Email
     {
-        return Internet::freeEmailDomain();
+        return new Email(
+            self::getRandomName()->value(). ".".
+            self::getRandomSurname()->value(). "@".
+            Internet::freeEmailDomain()
+        );
     }
 
-    protected static function getRandomCountryCode(): string
+    protected static function getRandomCountryCode(): CountryCode
     {
-        return Miscellaneous::countryCode();
+        return new CountryCode(Miscellaneous::countryCode());
     }
 }

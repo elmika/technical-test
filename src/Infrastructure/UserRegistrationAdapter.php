@@ -3,6 +3,10 @@
 
 namespace App\Infrastructure;
 
+use App\Domain\ValueObject\CountryCode;
+use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\Name;
+use App\Domain\ValueObject\Surname;
 use TestOrg\Domain\User;
 use TestOrg\Domain\UserRegistration;
 
@@ -16,10 +20,10 @@ class UserRegistrationAdapter
     public static function fromDTO(UserRegistrationDTO $dto) : UserRegistration
     {
         $user = new User(
-            $dto->getName(),
-            $dto->getSurname(),
-            $dto->getEmail(),
-            $dto->getCountry()
+            new Name($dto->getName()),
+            new Surname($dto->getSurname()),
+            new Email($dto->getEmail()),
+            new CountryCode($dto->getCountry())
         );
 
         return (new UserRegistration(
