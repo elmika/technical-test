@@ -3,17 +3,19 @@
 
 namespace TestOrg\Domain;
 
+use App\Domain\ValueObject\CountryCode;
+
 class UserRegistrationCriteria
 {
     /**
-     * @var array list of countries accepted by our filter
+     * @var array|null list of countries accepted by our filter
      */
-    private $countries;
+    private ?array $countries = null;
 
     /**
-     * @var int shorter time of activation we are interested to see
+     * @var int|null shorter time of activation we are interested to see
      */
-    private $activationLength;
+    private ?int $activationLength = null;
 
     /**
      * UserRegistrationCriteria constructor.
@@ -22,12 +24,7 @@ class UserRegistrationCriteria
     public function __construct(array $parameters)
     {
         if (array_key_exists('countries', $parameters)) {
-            if (is_array($parameters["countries"])) {
-                $countries = $parameters["countries"];
-            } else {
-                $countries = explode(",", $parameters['countries']);
-            }
-            $this->addCountriesFilter($countries);
+            $this->addCountriesFilter($parameters['countries']);
         }
 
         if (array_key_exists('activation_length', $parameters)) {
@@ -35,12 +32,24 @@ class UserRegistrationCriteria
         }
     }
 
-    public function addCountriesFilter(array $countries)
+    public function addCountriesFilter($countryList)
     {
-        $this->countries = $countries;
+        $this->countries = [];
+
+        if (empty($countryList)) {
+            $countries = [];
+        } elseif (is_array($countryList)) {
+            $countries = $countryList;
+        } else {
+            $countries = explode(",", $countryList);
+        }
+
+        foreach ($countries as $country) {
+            $this->countries[] = new CountryCode($country);
+        }
     }
 
-    public function addActivationLengthFilter($length)
+    public function addActivationLengthFilter(int $length)
     {
         $this->activationLength = $length;
     }

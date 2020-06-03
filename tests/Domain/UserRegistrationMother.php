@@ -2,8 +2,11 @@
 
 namespace TestOrg\Tests\Domain;
 
+use App\Domain\ValueObject\CreationDate;
+use App\Domain\ValueObject\UserRegistrationID;
 use Faker\Provider\Base;
 use Faker\Provider\DateTime as FakerDateTime;
+use TestOrg\Domain\User;
 use TestOrg\Domain\UserRegistration;
 
 class UserRegistrationMother
@@ -11,18 +14,18 @@ class UserRegistrationMother
     public static function dummy()
     {
         return new UserRegistration(
-            1,
+            new UserRegistrationID(1),
             UserMother::dummy(),
-            new \DateTimeImmutable("2020-05-10")
+            new CreationDate(new \DateTimeImmutable("2020-05-10"))
         );
     }
 
     public static function random()
     {
         return new UserRegistration(
-            self::getRandomId(),
+            new UserRegistrationID(self::getRandomId()),
             UserMother::random(),
-            self::getRandomDateInThePast()
+            new CreationDate(self::getRandomDateInThePast())
         );
     }
 

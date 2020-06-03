@@ -1,4 +1,6 @@
-
+###> Identation fixer ###
+/.phpcs-cache
+###< Identation fixer ###
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

@@ -3,6 +3,7 @@
 
 namespace TestOrg\Tests\Infrastructure;
 
+use App\Domain\ValueObject\UserRegistrationID;
 use PHPUnit\Framework\TestCase;
 use TestOrg\Domain\UserRegistrationCollection;
 use TestOrg\Domain\UserRegistrationCriteria;
@@ -52,7 +53,7 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     private function collectionMatches(array $expectedIds) : bool
     {
         foreach ($this->collection as $element) {
-            $id = array_shift($expectedIds);
+            $id = new UserRegistrationID(array_shift($expectedIds));
             if (! $element->hasId($id)) {
                 return false;
             }
@@ -87,7 +88,7 @@ class ListUserRegistrationCsvRepositoryTest extends TestCase
     {
         foreach ($this->collection as $registration) {
             if (! $this->findAndRemove(
-                $registration->getId(),
+                $registration->getId()->value(),
                 $expectedIds
             )) {
                 return false;

@@ -14,7 +14,7 @@ class UserRegistrationCriteriaMother
     public static function dummy()
     {
         return new UserRegistrationCriteria([
-                 'countries' => ["ES,FR,US"],
+                 'countries' => "ES,FR,US",
                  'activation_length' => 11,
                  'dummy_filter' => "dummy_value"
         ]);

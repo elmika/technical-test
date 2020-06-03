@@ -3,32 +3,34 @@
 
 namespace TestOrg\Domain;
 
+use App\Domain\ValueObject\ActivationDate;
+use App\Domain\ValueObject\ChargerID;
+use App\Domain\ValueObject\CreationDate;
+use App\Domain\ValueObject\UserRegistrationID;
+
 class UserRegistration
 {
-    private $id;
-    private $user;
-    private $createdAt;
-    private $activatedAt = null;
-    private $chargerId = null;
+    private UserRegistrationID $id;
+    private User $user;
+    private CreationDate $createdAt;
+    private ?ActivationDate $activatedAt = null;
+    private ?ChargerID $chargerId = null;
 
-    public function __construct($id, User $user, \DateTimeImmutable $createdAt)
+    public function __construct(UserRegistrationID $id, User $user, CreationDate $createdAt)
     {
         $this->id = $id;
         $this->user = $user;
-        $this->createdAt = $createdAt->setTime(0, 0, 0);
+        $this->createdAt = $createdAt;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId() : UserRegistrationID
     {
         return $this->id;
     }
 
-    public function hasId(int $id) : bool
+    public function hasId(UserRegistrationID $id) : bool
     {
-        return $this->id === $id;
+        return $this->id->isEqualTo($id);
     }
     /**
      * @return User
@@ -38,10 +40,7 @@ class UserRegistration
         return $this->user;
     }
 
-    /**
-     * @return \DateTimeImmutable
-     */
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): CreationDate
     {
         return $this->createdAt;
     }
@@ -52,29 +51,23 @@ class UserRegistration
     }
 
     /**
-     * @param string $chargerId
-     * @param \DateTimeImmutable $activatedAt
+     * @param ChargerID $chargerId
+     * @param ActivationDate $activatedAt
      * @return $this
      */
-    public function activate(string $chargerId, \DateTimeImmutable $activatedAt): self
+    public function activate(ChargerID $chargerId, ActivationDate $activatedAt): self
     {
-        $this->activatedAt = $activatedAt->setTime(0, 0, 0);
+        $this->activatedAt = $activatedAt;
         $this->chargerId = $chargerId;
         return $this;
     }
 
-    /**
-     * @return \DateTimeImmutable
-     */
-    public function getActivatedAt(): \DateTimeImmutable
+    public function getActivatedAt(): ActivationDate
     {
         return $this->activatedAt;
     }
 
-    /**
-     * @return string
-     */
-    public function getChargerId()
+    public function getChargerId() : ChargerID
     {
         return $this->chargerId;
     }
@@ -84,20 +77,20 @@ class UserRegistration
      * Note: if registration has not been activated yet,
      * we return the difference between creation date and today
      *
-     * @var int $minLength
-     * @return int
+     * @return bool
      * @throws \Exception
+     * @var int $minLength
      */
-    public function isOverActivationLength(int $minLength): int
+    public function isOverActivationLength(int $minLength): bool
     {
         if ($this->isActivated()) {
             $activatedAt = $this->activatedAt;
         } else {
-            $activatedAt = (new \DateTimeImmutable())->setTime(0, 0, 0);
+            $activatedAt = new ActivationDate();
         }
 
-        $activationLengthDays = (int)$activatedAt->diff($this->createdAt)->format('%a');
-        return $activationLengthDays >= $minLength;
+        $activationLength = $activatedAt->diffDays($this->createdAt);
+        return $activationLength >= $minLength;
     }
 
     /**
@@ -106,7 +99,13 @@ class UserRegistration
      */
     public function isWithinCountries(array $countries)
     {
-        return in_array($this->getUser()->getCountryCode(), $countries);
+        $thisCountryCode = $this->getUser()->getCountryCode();
+        foreach ($countries as $countryCode) {
+            if ($thisCountryCode->isEqualTo($countryCode)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

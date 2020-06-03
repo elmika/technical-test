@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Domain\ValueObject;
+namespace App\Domain\ValueObject\Base;
 
 use App\Domain\Exception\DomainException;
 use App\Domain\Exception\InvalidValueException;
@@ -36,7 +36,7 @@ abstract class StringValueObject
      * @param $object
      * @throws InvalidValueException
      */
-    protected function throwInvalidValueException($value, $object)
+    protected function throwInvalidValueException(string $value, string $object)
     {
         throw new InvalidValueException(
             sprintf("%s is no a valid %s format.", $value, $object)
