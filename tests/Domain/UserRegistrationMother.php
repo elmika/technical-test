@@ -1,13 +1,13 @@
 <?php
 
-namespace TestOrg\Tests\Domain;
+namespace App\Tests\Domain;
 
 use App\Domain\ValueObject\CreationDate;
 use App\Domain\ValueObject\UserRegistrationID;
 use Faker\Provider\Base;
 use Faker\Provider\DateTime as FakerDateTime;
-use TestOrg\Domain\User;
-use TestOrg\Domain\UserRegistration;
+use App\Domain\User;
+use App\Domain\UserRegistration;
 
 class UserRegistrationMother
 {

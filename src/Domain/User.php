@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TestOrg\Domain;
+namespace App\Domain;
 
 use App\Domain\ValueObject\CountryCode;
 use App\Domain\ValueObject\Email;

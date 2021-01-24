@@ -1,14 +1,14 @@
 <?php
 
 
-namespace TestOrg\Tests\Infrastructure;
+namespace App\Tests\Infrastructure;
 
 use App\Domain\ValueObject\UserRegistrationID;
 use PHPUnit\Framework\TestCase;
-use TestOrg\Domain\UserRegistrationCollection;
-use TestOrg\Domain\UserRegistrationCriteria;
-use TestOrg\Infrastructure\ListUserRegistrationCsvRepository;
-use TestOrg\Tests\Domain\UserRegistrationCriteriaMother;
+use App\Domain\UserRegistrationCollection;
+use App\Domain\UserRegistrationCriteria;
+use App\Infrastructure\ListUserRegistrationCsvRepository;
+use App\Tests\Domain\UserRegistrationCriteriaMother;
 
 class ListUserRegistrationCsvRepositoryTest extends TestCase
 {

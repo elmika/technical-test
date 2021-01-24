@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TestOrg\Domain;
+namespace App\Domain;
 
 use App\Domain\ValueObject\ActivationDate;
 use App\Domain\ValueObject\ChargerID;

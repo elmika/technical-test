@@ -1,9 +1,9 @@
 <?php
 
 
-namespace TestOrg\Tests\Domain;
+namespace App\Tests\Domain;
 
-use TestOrg\Domain\UserRegistrationCollection;
+use App\Domain\UserRegistrationCollection;
 
 class UserRegistrationCollectionMother
 {

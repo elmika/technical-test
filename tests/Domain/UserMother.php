@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TestOrg\Tests\Domain;
+namespace App\Tests\Domain;
 
 use App\Domain\ValueObject\CountryCode;
 use App\Domain\ValueObject\Email;
@@ -12,7 +12,7 @@ use Faker\Generator;
 use Faker\Provider\Internet;
 use Faker\Provider\Miscellaneous;
 use Faker\Provider\Person;
-use TestOrg\Domain\User;
+use App\Domain\User;
 
 class UserMother
 {

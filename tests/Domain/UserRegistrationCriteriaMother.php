@@ -1,8 +1,8 @@
 <?php
 
-namespace TestOrg\Tests\Domain;
+namespace App\Tests\Domain;
 
-use TestOrg\Domain\UserRegistrationCriteria;
+use App\Domain\UserRegistrationCriteria;
 
 class UserRegistrationCriteriaMother
 {

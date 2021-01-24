@@ -11,8 +11,8 @@ use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Name;
 use App\Domain\ValueObject\Surname;
 use App\Domain\ValueObject\UserRegistrationID;
-use TestOrg\Domain\User;
-use TestOrg\Domain\UserRegistration;
+use App\Domain\User;
+use App\Domain\UserRegistration;
 
 class UserRegistrationAdapter
 {

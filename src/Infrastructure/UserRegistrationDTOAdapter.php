@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure;
 
-use TestOrg\Domain\UserRegistration;
+use App\Domain\UserRegistration;
 
 class UserRegistrationDTOAdapter
 {
