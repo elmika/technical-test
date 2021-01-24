@@ -1,3 +1,9 @@
+# About
+
+This project displays a list of user registrations in a GET endpoint api call.
+
+
+
 # Environment setup
 
 ### Run Docker container
@@ -82,8 +88,9 @@ Published on Swagger Hub: https://app.swaggerhub.com/apis/elmika/technical-test/
 - Further possible steps:
     - Value objects could be introduced as attributes, especially for emails and country codes.
     - Introduce caching strategy to retrieve csv (retrieve header with HEAD request and see if newer version has been published)
-    - Move ordering logic into Criteria.
-    - Define app (&domain) specific exceptions, introduce corresponding exception handling
-    - Set up proper nginx server in the Docker container. Configure to run with symfony.           
-    - Introduce acceptance tests with Behat
-    - Move controllers in Infrastructure folder
+    - Fork and see how we can use Tactician to introduce CQRS.
+    
+  Also...
+    - Introduce a relational database
+    - Introduce Authentication Layer
+    - Create other REST endpoints: POST, DELETE, PUT, PATCH
