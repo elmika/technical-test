@@ -1,14 +1,14 @@
 <?php
 
 
-namespace TestOrg\Infrastructure;
+namespace App\Infrastructure;
 
 use App\Infrastructure\UserRegistrationAdapter;
 use App\Infrastructure\UserRegistrationDTOAdapter;
 
-use TestOrg\Domain\ListUserRegistrationRepository;
-use TestOrg\Domain\UserRegistrationCollection;
-use TestOrg\Domain\UserRegistrationCriteria;
+use App\Domain\ListUserRegistrationRepository;
+use App\Domain\UserRegistrationCollection;
+use App\Domain\UserRegistrationCriteria;
 
 class ListUserRegistrationCsvRepository implements ListUserRegistrationRepository
 {

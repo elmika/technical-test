@@ -17,7 +17,7 @@ docker run --rm -p 8000:80 --name=simple_person "registration-exercise"
 
 In dev
 ````
-docker-compose rebuild
+make rebuild
 ````
 
 
@@ -71,13 +71,15 @@ Published on Swagger Hub: https://app.swaggerhub.com/apis/elmika/technical-test/
 
 - DDD structure:    
     - User is implemented as an Immutable object, and contains only user information: name, surname, email and country.
+    - Value objects: id, emails, country codes, etc.
     - UserRegistration is the root Agregate. 
     - We proposed a logic of dealing with non registered users and possible posterior registration.
     - UserRegistrationCollection is a list of UserRegistration and contains logic for filtering and ordering.
-    - A Repository interface is defined in the Domain, implemented in the Infrastucture layer, used in the Application layer and instanciated in the Controller.
+    - A Repository interface is defined in the Domain, implemented in the Infrastucture layer, used in the Application layer and underlying objects are instanciated in the Controller.
     - Criteria is used to apply modifying logic of the collection of registration. At the moment, it only contains logic for filtering.
     - Introduced DTOs in Infrastructure.
-
+    - Controller in Infrastructure folder.
+    
 - Project:
     - Testing: Use mockery to mock infrastructure objects in domain object unit testing.
     - Testing: Functional testing checks filtering functionalities against a local file (which is a trade-off integration test).
@@ -86,11 +88,15 @@ Published on Swagger Hub: https://app.swaggerhub.com/apis/elmika/technical-test/
     - Code identation review and fix made available (needs php installed locally).
 
 - Further possible steps:
-    - Value objects could be introduced as attributes, especially for emails and country codes.
-    - Introduce caching strategy to retrieve csv (retrieve header with HEAD request and see if newer version has been published)
-    - Fork and see how we can use Tactician to introduce CQRS.
-    
-  Also...
+    - Introduce Tests that cover our controller and DTOs.
     - Introduce a relational database
     - Introduce Authentication Layer
     - Create other REST endpoints: POST, DELETE, PUT, PATCH
+
+- Also considered previously:    
+    - Introduce acceptance tests with Behat    
+    - Move ordering logic into Criteria.
+    - Exception handling: Define app (&domain) specific exceptions
+    - Docker setup: Set up proper nginx server to work with Symfony.           
+    - Introduce caching strategy to retrieve csv (retrieve header with HEAD request and see if newer version has been published)
+    - Fork and see how we can use Tactician to introduce CQRS.

@@ -1,15 +1,15 @@
 <?php
 
 
-namespace TestOrg\Infrastructure\Controller;
+namespace App\Infrastructure\Controller;
 
 use App\Infrastructure\UserRegistrationCollectionMarshaller;
-use TestOrg\Application\Service\ListUserRegistrations;
+use App\Application\Service\ListUserRegistrations;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use TestOrg\Domain\UserRegistrationCriteria;
+use App\Domain\UserRegistrationCriteria;
 
 class UserRegistrationController extends AbstractController
 {

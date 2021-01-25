@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TestOrg\Infrastructure\EventListener;
+namespace App\Infrastructure\EventListener;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

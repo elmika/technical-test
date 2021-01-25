@@ -1,11 +1,11 @@
 <?php
 
 
-namespace TestOrg\Application\Service;
+namespace App\Application\Service;
 
-use TestOrg\Domain\ListUserRegistrationRepository;
-use TestOrg\Domain\UserRegistrationCollection;
-use TestOrg\Domain\UserRegistrationCriteria;
+use App\Domain\ListUserRegistrationRepository;
+use App\Domain\UserRegistrationCollection;
+use App\Domain\UserRegistrationCriteria;
 
 class ListUserRegistrations
 {

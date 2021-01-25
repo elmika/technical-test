@@ -1,60 +1,53 @@
 <?php
 
 
-namespace TestOrg\Domain;
+namespace App\Domain;
+
+use App\Domain\ValueObject\CountryCode;
+use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\Name;
+use App\Domain\ValueObject\Surname;
 
 class User
 {
-    private $name;
-    private $surname;
-    private $email;
-    private $countryCode;
+    private Name $name;
+    private Surname $surname;
+    private Email $email;
+    private CountryCode $countryCode;
 
-    public function __construct($name, $surname, $email, $countryCode)
+    public function __construct(Name $name, Surname $surname, Email $email, CountryCode $countryCode)
     {
-        $this->name = (string)$name;
-        $this->surname = (string)$surname;
-        $this->email = (string)$email;
-        $this->countryCode = (string)$countryCode;
+        $this->name = $name;
+        $this->surname = $surname;
+        $this->email = $email;
+        $this->countryCode = $countryCode;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName() : Name
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getSurname()
+    public function getSurname() : Surname
     {
         return $this->surname;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail() : Email
     {
         return $this->email;
     }
 
-    /**
-     * @return string
-     */
-    public function getCountryCode()
+    public function getCountryCode() : CountryCode
     {
         return $this->countryCode;
     }
     
-    public function compareTo($b)
+    public function compareTo(User $b) : int
     {
-        if ($this->surname == $b->getSurname()) {
-            return strcmp($this->name, $b->getName());
+        if ($this->surname->isEqualTo($b->getSurname())) {
+            return $this->name->compareTo($b->getName());
         }
-        return strcmp($this->surname, $b->getSurname());
+        return $this->surname->compareTo($b->getSurname());
     }
 }

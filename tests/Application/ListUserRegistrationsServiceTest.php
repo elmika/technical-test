@@ -1,17 +1,17 @@
 <?php
 
-namespace TestOrg\Tests\Application;
+namespace App\Tests\Application;
 
 use Mockery\MockInterface;
-use TestOrg\Application\Service\ListUserRegistrations;
-use TestOrg\Domain\ListUserRegistrationRepository;
-use TestOrg\Domain\UserRegistration;
-use TestOrg\Domain\UserRegistrationCollection;
-use TestOrg\Domain\UserRegistrationCriteria;
+use App\Application\Service\ListUserRegistrations;
+use App\Domain\ListUserRegistrationRepository;
+use App\Domain\UserRegistration;
+use App\Domain\UserRegistrationCollection;
+use App\Domain\UserRegistrationCriteria;
 use PHPUnit\Framework\TestCase;
-use TestOrg\Tests\Domain\UserRegistrationCollectionMother;
-use TestOrg\Tests\Domain\UserRegistrationCriteriaMother;
-use TestOrg\Tests\Domain\UserRegistrationMother;
+use App\Tests\Domain\UserRegistrationCollectionMother;
+use App\Tests\Domain\UserRegistrationCriteriaMother;
+use App\Tests\Domain\UserRegistrationMother;
 
 class ListUserRegistrationsServiceTest extends TestCase
 {

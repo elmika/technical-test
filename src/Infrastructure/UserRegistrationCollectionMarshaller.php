@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure;
 
-use TestOrg\Domain\UserRegistrationCollection;
+use App\Domain\UserRegistrationCollection;
 
 class UserRegistrationCollectionMarshaller
 {
