@@ -31,14 +31,14 @@ class UserRegistrationDTOAdapter
     public static function fromDomain(UserRegistration $registration) : UserRegistrationDTO
     {
         return new UserRegistrationDTO(
-            $registration->getId(),
+            $registration->getId()->value(),
             $registration->getUser()->getName(),
             $registration->getUser()->getSurname(),
             $registration->getUser()->getEmail(),
             $registration->getUser()->getCountryCode(),
-            $registration->getCreatedAt()->format("Y-m-d"),
-            $registration->isActivated() ? $registration->getActivatedAt()->format("Y-m-d") : null,
-            $registration->isActivated() ? $registration->getChargerId() : null
+            $registration->getCreatedAt(),
+            $registration->isActivated() ? $registration->getActivatedAt() : null,
+            $registration->isActivated() ? $registration->getChargerId()->value() : null
         );
     }
 }
