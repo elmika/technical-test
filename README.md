@@ -37,7 +37,45 @@ make sniff
 make clean
 ````  
 
-### Examples
+See docker logs
+
+```` 
+make logs
+```` 
+
+Get a shell in the container
+
+```` 
+make shell
+```` 
+
+
+### Other Available Commands
+
+These commands will be executed within the container
+
+```` 
+make clear-cache
+```` 
+
+
+```` 
+make composer-install
+```` 
+
+```` 
+make composer-update
+```` 
+
+````
+make composer-self-update
+````
+
+````
+composer-self-update-rollback
+````
+
+### API Usage Examples
 
 ````
 curl http://localhost:8000/users
@@ -89,9 +127,10 @@ Published on Swagger Hub: https://app.swaggerhub.com/apis/elmika/technical-test/
 
 - Further possible steps:
     - Introduce Tests that cover our controller and DTOs.
-    - Introduce a relational database
-    - Introduce Authentication Layer
+    - Introduce a relational database    
     - Create other REST endpoints: POST, DELETE, PUT, PATCH
+    - Introduce Code coverage
+    - Introduce Authentication Layer
 
 - Also considered previously:    
     - Introduce acceptance tests with Behat    

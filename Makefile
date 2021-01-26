@@ -24,10 +24,10 @@ test:
 	docker exec -it simple_person bin/phpunit
 
 sniff:
-	php vendor/bin/phpcs --standard=PSR2 src
+	docker exec -it simple_person php vendor/bin/phpcs --standard=PSR2 src
 
 clean:
-	php vendor/bin/phpcbf --standard=PSR2 src
+	docker exec -it simple_person php vendor/bin/phpcbf --standard=PSR2 src
 
 logs:
 	docker logs -f simple_person
