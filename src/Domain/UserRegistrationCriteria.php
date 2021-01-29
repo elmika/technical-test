@@ -5,6 +5,19 @@ namespace App\Domain;
 
 use App\Domain\ValueObject\CountryCode;
 
+/**
+ * The Criteria pattern is powerful, but can be a pain in the ass. I suggest you to give this class a little bit more of
+ * abstraction and avoid being couple to a specific domain object. You can define a generic Criteria object, compose by
+ * some Filters and some sorting strategy.
+ *
+ * Criteria ->  public function __construct(FilterCollection $filters, Sort $sort, ?int $offset, ?int $limit)
+ * Filter   ->  public function __construct(FilterField $field, FilterOperator $operator, FilterValue $value)
+ *          the operator can be an enum
+ * Sort     -> public function __construct(SortBy $sortBy, SortType $sortType)
+ *
+ * With these element you can be flexible enough to avoid repeating this UserRegistrationCriteria for each domain object
+ * that could need it. You will just have one.
+ */
 class UserRegistrationCriteria
 {
     /**

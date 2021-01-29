@@ -14,6 +14,11 @@ use App\Domain\ValueObject\UserRegistrationID;
 use App\Domain\User;
 use App\Domain\UserRegistration;
 
+/**
+ * Beware: this class is generating a side-effect. You ask for something, and instead on only returning it, you also
+ * change it, since you are activating a user. You really want to avoid this. Maybe is out of scope, but try to separate
+ * commands and queries. This DOES NOT mean doing CQRS, it just means CQS.
+ */
 class UserRegistrationAdapter
 {
     /**

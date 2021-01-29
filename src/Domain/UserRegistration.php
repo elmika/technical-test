@@ -8,6 +8,11 @@ use App\Domain\ValueObject\ChargerID;
 use App\Domain\ValueObject\CreationDate;
 use App\Domain\ValueObject\UserRegistrationID;
 
+/**
+ * Is quite interesting the decision of having UserRegistration as an aggregate and User as a value object. Seems not so
+ * comfortable to see, but depends on business discussion: if domain experts need to identify registrations instead of
+ * users, then is perfectly fine.
+ */
 class UserRegistration
 {
     private UserRegistrationID $id;

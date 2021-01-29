@@ -10,6 +10,24 @@ use App\Domain\Exception\InvalidValueException;
 /**
  * Class DateValueObject
  * @package App\Domain\ValueObject
+ *
+ * These objects you put in Base folder, are part of the Shared Kernel, that basically is a
+ * generic subdomain and can be represented with a folder Shared/ at the same level of your modules or your bounded
+ * contexts. You can have multiple Shared folders, depending on your whole project needs.
+ *
+ * By the way, you are not explicitly using any bounded context, nor module. Probably you want to have:
+ * src/Users
+ * src/Shared
+ *
+ * OR something more complex like
+ *
+ * src/NiceBoundedContext/Users
+ * src/NiceBoundedContext/Products
+ * src/NiceBoundedContext/Shared
+ * src/CoolBoundedContext/Accounts
+ * src/CoolBoundedContext/Invoices
+ * src/CoolBoundedContext/Shared
+ * src/Shared
  */
 abstract class DateValueObject
 {

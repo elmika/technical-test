@@ -3,6 +3,26 @@
 
 namespace App\Infrastructure;
 
+/**
+ *
+ * Just for semantic, I would call this UserRegistrationResponse, to clarify the intention of this class.
+ * DTO is too generic: a Response should always be a DTO, but a DTO can be multiple things.
+ *
+ * Moreover, this object could perfectly live inside application layer, just near to who should produce it, that is the
+ * use case that you call in your controller.
+ *
+ * src/Application/Service/ListUserRegistrations -> is a query you make to your system that internally uses some repo to
+ * retrieve a collection of domain objects. Instead of returning domain object to controller, you can use DTOs once
+ * again, and return a Response object to your controller. So infrastructure knows less about domain.
+ *
+ * src/Application/Service/UserRegistrationResponse -> this will take a single UserRegistration
+ * src/Application/Service/UserRegistrationCollectionResponse -> this will take a collection of UserRegistration
+ *
+ * In the case you need it also for retrieving things from a persistence system, then you could have a mapper, like
+ * Doctrine does. The name is quite self-explaining a broadly used. Probably it is just a case that here you can use the
+ * same object for both purposes, but try to follow the rule of three by Fowler, since premature abstraction could be
+ * misleading.
+ */
 class UserRegistrationDTO implements \JsonSerializable
 {
     private int $id;

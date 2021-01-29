@@ -13,6 +13,17 @@ use App\Tests\Domain\UserRegistrationCollectionMother;
 use App\Tests\Domain\UserRegistrationCriteriaMother;
 use App\Tests\Domain\UserRegistrationMother;
 
+/**
+ * If you to follow exactly the same folder structure of your code, you will find things faster when you navigate.
+ * Moreover, it allows you to automate some scripts for testing and coverage, and any other tool you need in your CD/CI
+ * pipeline. And another thing is to keep the name consistent, like:
+ *
+ * src/Application/Service/ListUserRegistrations
+ * tests/Application/Service/ListUserRegistrationsTest
+ *
+ * Super useful TDD cheat sheet:
+ * https://github.com/neomatrix369/refactoring-developer-habits/blob/master/02-outcome-of-collation/tdd-manifesto/tdd-good-habits-manifesto.md
+ */
 class ListUserRegistrationsServiceTest extends TestCase
 {
     private $service;

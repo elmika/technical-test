@@ -10,6 +10,9 @@ use App\Domain\UserRegistrationCriteria;
 use App\Infrastructure\ListUserRegistrationCsvRepository;
 use App\Tests\Domain\UserRegistrationCriteriaMother;
 
+/**
+ * Check CodelyTV course about testing and ATDD to integrate acceptance testing to the suite ;)
+ */
 class ListUserRegistrationCsvRepositoryTest extends TestCase
 {
     // private $service;
